@@ -15,15 +15,16 @@ The dashboard shows:
 - 📅 Upcoming matches with start times
 - ✅ Completed matches
 - 🏆 World Cup match identification
+- 📊 Agent activity and performance
 
 ## 📊 Features
 
 ### 1. Live Dashboard
-- Real-time match monitoring
-- Auto-refresh every 60 seconds
+- Real-time match monitoring with auto-refresh (30 seconds)
 - Match status indicators (Live/Soon/Upcoming/Completed)
 - World Cup match badges
-- Statistics: total, live, upcoming, completed
+- Statistics: total, live, upcoming, completed, World Cup count
+- Click on any match for detailed information
 
 ### 2. Agent Arena
 Two competing agents analyze the same data:
@@ -33,13 +34,25 @@ Two competing agents analyze the same data:
 | **Momentum Agent** | Follows trends | Buys when activity increases |
 | **Contrarian Agent** | Fades trends | Sells when activity is high |
 
-### 3. Pattern Analysis
+### 3. Match Detail View
+Click any match to see:
+- Competition and status
+- Start time
+- Agent activity for that match
+- Event count and scores availability
+
+### 4. Agent Performance History
+- Tracks bankroll, trades, wins, and losses
+- Updates in real-time
+- Shows last action for each agent
+
+### 5. Pattern Analysis
 - Competition breakdown
 - Team appearance statistics
 - Upcoming match schedule
 - Match pattern detection
 
-### 4. Sharp Movement Detector
+### 6. Sharp Movement Detector
 - Detects sudden changes in match activity
 - Tracks score event intensity
 - Logs significant movements
@@ -59,16 +72,15 @@ Two competing agents analyze the same data:
 ```
 txline-worldcup-agent/
 ├── api/
-│   └── server.js          # API endpoint for matches
+│   └── server.js          # API endpoint for matches with agent logic
 ├── public/
-│   └── index.html         # Dashboard frontend
+│   └── index.html         # Dashboard frontend with match detail modal
 ├── src/
 │   ├── live_monitor.js    # Live match monitoring
 │   ├── dashboard.js       # Match dashboard
 │   ├── pattern_analyzer.js # Pattern analysis
 │   ├── agent_arena.js     # Agent competition
-│   ├── sharp_detector.js  # Sharp movement detection
-│   └── realtime_monitor.js # Realtime updates
+│   └── sharp_detector.js  # Sharp movement detection
 ├── scripts/
 │   ├── test_token.js      # API token testing
 │   └── subscribe.js       # On-chain subscription
@@ -137,8 +149,23 @@ vercel --prod
 
 | Endpoint | Method | Description |
 |----------|--------|-------------|
-| `/api/matches` | GET | Returns all matches with status |
-| `/api/matches?worldcup=true` | GET | Returns only World Cup matches |
+| `/api/matches` | GET | Returns all matches with status, agent activity, and performance |
+
+### Example Response
+
+```json
+{
+  "success": true,
+  "count": 5,
+  "data": [...],
+  "agents": {
+    "momentum": { "bankroll": 10000, "trades": 0, ... },
+    "contrarian": { "bankroll": 10000, "trades": 0, ... }
+  },
+  "decisions": [...],
+  "timestamp": "2026-07-12T..."
+}
+```
 
 ## 🏗️ TxLINE Endpoints Used
 

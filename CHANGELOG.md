@@ -1,5 +1,21 @@
 # Changelog
 
+## [0.4.0] - 2026-07-12
+
+### Added
+- **Match Detail Modal**: Click any match to view detailed information including competition, status, start time, and agent activity
+- **Agent Performance History**: Tracks Momentum and Contrarian agent performance over time (bankroll, trades, wins/losses)
+- **Agent Activity Display**: Shows which agent is active on each match with real-time updates
+- **Clickable Match Cards**: Hover effects and smooth transitions on match cards
+- **Enhanced Dashboard Stats**: Added World Cup counter to stats grid
+- **Better Error Handling**: Improved error messages and loading states
+
+### Enhanced
+- **UI/UX**: Better visual hierarchy, hover effects, and responsive design
+- **API**: Added agent decisions and activity tracking to API responses
+- **Dashboard**: Real-time agent updates every 30 seconds
+- **Mobile Responsiveness**: Improved layout for mobile devices
+
 ## [0.3.0] - 2026-07-12
 
 ### Added
@@ -13,12 +29,6 @@
 - **Error Handling**: Better error messages for missing credentials
 - **CORS Support**: API endpoints allow cross-origin requests
 - **Logging**: More detailed logs for debugging
-
-### Fixed
-- Vercel deployment configuration
-- API route handling
-- Environment variable loading on production
-- 404 errors on API routes
 
 ## [0.2.0] - 2026-07-12
 
