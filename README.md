@@ -1,5 +1,7 @@
 # TxLINE World Cup Agent
 
+**Version:** 0.8.1
+
 Autonomous multi-agent trading system built on TxLINE's live World Cup data feed. Three independent agents run competing strategies against the same real-time feed, with all decisions, bankrolls, and outcomes tracked and exposed through a live dashboard.
 
 Built for Superteam's Trading Tools & Agents track (TxLINE World Cup Hackathon).
@@ -155,11 +157,16 @@ vercel --prod
 
 ---
 
-## Roadmap
+## Changelog
 
-- On-chain settlement: anchor agent trade decisions to Solana devnet as verifiable records
-- Match detail view with full agent activity log per fixture
-- Configurable strategy parameters per agent, exposed via API
+See [CHANGELOG.md](./CHANGELOG.md) for full version history.
+
+| Version | Date | Key Features |
+|---------|------|--------------|
+| 0.8.1 | 2026-07-13 | Fixed analytics navigation, enhanced UI |
+| 0.8.0 | 2026-07-13 | Next Match countdown, Leaderboard, Confidence scores |
+| 0.7.0 | 2026-07-13 | On-chain settlement, Match Detail Modal |
+| 0.6.0 | 2026-07-13 | UI Overhaul, Analytics Dashboard |
 
 ---
 

@@ -1,5 +1,15 @@
 # Changelog
 
+## [0.8.1] - 2026-07-13
+
+### Added
+- **Fixed Analytics Navigation**: Added proper route to `/analytics` in vercel.json so analytics page loads correctly
+- **Enhanced Analytics Button**: Bigger, more noticeable CTA button on main dashboard with hover glow effect
+
+### Fixed
+- Analytics link now correctly serves `analytics.html` instead of redirecting to index.html
+- Vercel routing configuration now properly handles static HTML files
+
 ## [0.8.0] - 2026-07-13
 
 ### Added
