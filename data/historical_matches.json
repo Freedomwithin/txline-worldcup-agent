@@ -1,0 +1,81 @@
+{
+  "matches": [
+    {
+      "id": 1,
+      "home": "France",
+      "away": "Spain",
+      "competition": "World Cup",
+      "date": "2026-07-14T15:00:00Z",
+      "home_rank": 2,
+      "away_rank": 3,
+      "home_goals_avg": 2.1,
+      "away_goals_avg": 1.9,
+      "predicted": "France favored (higher rank, better form)",
+      "events": [
+        { "type": "goal", "minute": 23, "team": "France" },
+        { "type": "goal", "minute": 45, "team": "Spain" },
+        { "type": "yellow_card", "minute": 67, "team": "France" },
+        { "type": "goal", "minute": 78, "team": "France" }
+      ]
+    },
+    {
+      "id": 2,
+      "home": "England",
+      "away": "Argentina",
+      "competition": "World Cup",
+      "date": "2026-07-15T15:00:00Z",
+      "home_rank": 4,
+      "away_rank": 1,
+      "home_goals_avg": 1.8,
+      "away_goals_avg": 2.3,
+      "predicted": "Argentina favored (world #1)",
+      "events": [
+        { "type": "goal", "minute": 12, "team": "England" },
+        { "type": "goal", "minute": 34, "team": "Argentina" },
+        { "type": "goal", "minute": 56, "team": "England" },
+        { "type": "goal", "minute": 89, "team": "Argentina" }
+      ]
+    },
+    {
+      "id": 3,
+      "home": "Vietnam",
+      "away": "Myanmar",
+      "competition": "Friendlies",
+      "date": "2026-07-18T11:00:00Z",
+      "home_rank": 115,
+      "away_rank": 162,
+      "home_goals_avg": 0.8,
+      "away_goals_avg": 0.6,
+      "predicted": "Vietnam favored (higher rank)",
+      "events": [
+        { "type": "goal", "minute": 15, "team": "Vietnam" }
+      ]
+    },
+    {
+      "id": 4,
+      "home": "Australia",
+      "away": "Brazil",
+      "competition": "Friendlies",
+      "date": "2026-09-25T11:00:00Z",
+      "home_rank": 24,
+      "away_rank": 5,
+      "home_goals_avg": 1.3,
+      "away_goals_avg": 2.0,
+      "predicted": "Brazil favored (elite tier)",
+      "events": []
+    },
+    {
+      "id": 5,
+      "home": "Australia",
+      "away": "Brazil",
+      "competition": "Friendlies",
+      "date": "2026-09-29T11:00:00Z",
+      "home_rank": 24,
+      "away_rank": 5,
+      "home_goals_avg": 1.3,
+      "away_goals_avg": 2.0,
+      "predicted": "Brazil favored again",
+      "events": []
+    }
+  ]
+}

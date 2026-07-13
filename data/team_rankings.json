@@ -1,0 +1,60 @@
+{
+  "teams": {
+    "Argentina": {
+      "rank": 1,
+      "points": 1913.71,
+      "goals_avg": 2.3,
+      "tier": "elite",
+      "world_cup_wins": 3
+    },
+    "France": {
+      "rank": 2,
+      "points": 1925.86,
+      "goals_avg": 2.1,
+      "tier": "elite",
+      "world_cup_wins": 2
+    },
+    "Spain": {
+      "rank": 3,
+      "points": 1892.28,
+      "goals_avg": 1.9,
+      "tier": "elite",
+      "world_cup_wins": 1
+    },
+    "England": {
+      "rank": 4,
+      "points": 1850.97,
+      "goals_avg": 1.8,
+      "tier": "elite",
+      "world_cup_wins": 1
+    },
+    "Brazil": {
+      "rank": 5,
+      "points": 1804.92,
+      "goals_avg": 2.0,
+      "tier": "elite",
+      "world_cup_wins": 5
+    },
+    "Australia": {
+      "rank": 24,
+      "points": 1560.00,
+      "goals_avg": 1.3,
+      "tier": "mid",
+      "world_cup_wins": 0
+    },
+    "Vietnam": {
+      "rank": 115,
+      "points": 1160.00,
+      "goals_avg": 0.8,
+      "tier": "lower",
+      "world_cup_wins": 0
+    },
+    "Myanmar": {
+      "rank": 162,
+      "points": 1000.00,
+      "goals_avg": 0.6,
+      "tier": "lower",
+      "world_cup_wins": 0
+    }
+  }
+}

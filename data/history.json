@@ -1,0 +1,27 @@
+{
+  "snapshots": [
+    {
+      "timestamp": "2026-07-13T11:22:16.463Z",
+      "agents": [
+        {
+          "name": "ML Prophet",
+          "bankroll": 10000,
+          "winRate": 0,
+          "trades": 0
+        },
+        {
+          "name": "Sentinel AI",
+          "bankroll": 10000,
+          "winRate": 0,
+          "trades": 0
+        },
+        {
+          "name": "Simple Momentum",
+          "bankroll": 10000,
+          "winRate": 0,
+          "trades": 0
+        }
+      ]
+    }
+  ]
+}

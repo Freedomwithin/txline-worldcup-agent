@@ -36,3 +36,7 @@ coverage/
 wallet.json
 .vercel
 .env*
+
+# Local docs
+
+project_scope.md
