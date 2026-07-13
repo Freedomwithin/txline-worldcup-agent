@@ -34,3 +34,5 @@ coverage/
 *.key
 *.private
 wallet.json
+.vercel
+.env*
