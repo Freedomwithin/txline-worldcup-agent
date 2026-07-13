@@ -43,7 +43,7 @@ TxLINE feed (fixtures + scores)
         ▼
   Agent state (bankroll, trades, win/loss) written per cycle
         │
-        ├──► /api/matches   → live dashboard (fixtures, agent status)
+        ├──► /api/matches   → live dashboard (fixtures, agent status, predictions)
         └──► /api/history   → analytics dashboard (throttled 15-min snapshots)
 ```
 
@@ -63,14 +63,17 @@ Agents act independently on each polling cycle. There is no manual trade approva
 
 ## Dashboards
 
-**Live Dashboard**
+### Live Dashboard
 - Real-time match monitoring with 30-second auto-refresh
 - Match status indicators: live, soon, upcoming, completed
+- **Next Match** countdown timer
+- **Agent Leaderboard** showing top performing agent
+- Agent predictions with confidence scores (BUY/SELL/HOLD)
 - World Cup match badges and per-match event counts
 - Per-agent status: bankroll, trade count, win/loss record, last action
 - Click any match for detailed view with agent activity
 
-**Analytics Dashboard**
+### Analytics Dashboard
 - Bankroll comparison across agents
 - Win rate comparison
 - Win/loss record breakdown
@@ -110,14 +113,14 @@ txline-arena-agent/
 ├── api/
 │   └── server.js              # API layer: polling, ML agents, history endpoint
 ├── public/
-│   ├── index.html              # Live dashboard
+│   ├── index.html              # Live dashboard with predictions and leaderboard
 │   ├── analytics.html          # Analytics dashboard
 │   └── assets/
 │       └── u.i_screenshots/    # Screenshots for README
 │           ├── dashboard.png
 │           └── agent_analytics.png
 ├── src/
-│   ├── ml_agent.js             # Pattern detection logic
+│   ├── ml_agent.js             # Pattern detection logic with FIFA rankings
 │   ├── ml_agent_arena.js       # Multi-agent orchestration
 │   ├── history.js              # Throttled snapshot storage
 │   ├── onchain_settlement.js   # Solana devnet settlement

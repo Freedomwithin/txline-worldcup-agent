@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.8.0] - 2026-07-13
+
+### Added
+- **Next Match Countdown**: Live countdown timer showing time until next World Cup match
+- **Agent Leaderboard**: Ranks agents by bankroll with 1st, 2nd, 3rd place badges
+- **Confidence Scores**: Each agent displays prediction confidence percentage (BUY/SELL/HOLD)
+- **Prediction Display**: Color-coded agent predictions (BUY = green, SELL = red, HOLD = gold)
+- **Team Rankings**: FIFA rankings for all teams (Argentina #1, France #2, Spain #3, England #4, Brazil #5, Australia #24, Vietnam #115, Myanmar #162)
+
+### Enhanced
+- **Agent Cards**: Now show last prediction with confidence percentage
+- **Dashboard Layout**: Added Next Match and Leaderboard sections
+- **Navigation**: Analytics link in header for easy access
+
 ## [0.7.0] - 2026-07-13
 
 ### Added
