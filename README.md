@@ -1,29 +1,91 @@
-# TxLINE World Cup Agent
+# 🌍 TxLINE World Cup Agent
 
-A real-time agent for monitoring World Cup matches using TxLINE's Solana-powered sports data API.
+A real-time agent for monitoring World Cup matches using TxLINE's Solana-powered sports data API. Live dashboard, agent arena, and pattern analysis all in one.
 
-## Overview
+[![Live Demo](https://img.shields.io/badge/Live_Demo-Vercel-000?style=for-the-badge&logo=vercel)](https://txline-worldcup-agent.vercel.app)
+[![GitHub](https://img.shields.io/badge/GitHub-Freedomwithin-181717?style=for-the-badge&logo=github)](https://github.com/Freedomwithin/txline-worldcup-agent)
+[![TxLINE](https://img.shields.io/badge/Powered_By-TxLINE-FF5722?style=for-the-badge)](https://txline.txodds.com)
 
-This agent fetches live World Cup data from TxLINE and provides:
+## 🚀 Live Demo
 
-- 📊 **Live Match Monitoring** - Track matches that are currently live or starting soon
-- 📅 **Match Dashboard** - View all World Cup fixtures with status indicators
-- 🔍 **Pattern Analysis** - Analyze team appearances, competitions, and match patterns
-- ⚡ **Sharp Movement Detection** - Detect significant odds shifts in real-time
+**View the live dashboard:** [https://txline-worldcup-agent.vercel.app](https://txline-worldcup-agent.vercel.app)
 
-## Prerequisites
+The dashboard shows:
+- 🔴 Live matches currently in progress
+- 📅 Upcoming matches with start times
+- ✅ Completed matches
+- 🏆 World Cup match identification
 
-- Node.js 20+ or Python 3.12+
-- A Solana wallet with devnet SOL
-- TxLINE API access (free tier for World Cup)
+## 📊 Features
 
-## Installation
+### 1. Live Dashboard
+- Real-time match monitoring
+- Auto-refresh every 60 seconds
+- Match status indicators (Live/Soon/Upcoming/Completed)
+- World Cup match badges
+- Statistics: total, live, upcoming, completed
+
+### 2. Agent Arena
+Two competing agents analyze the same data:
+
+| Agent | Strategy | Description |
+|-------|----------|-------------|
+| **Momentum Agent** | Follows trends | Buys when activity increases |
+| **Contrarian Agent** | Fades trends | Sells when activity is high |
+
+### 3. Pattern Analysis
+- Competition breakdown
+- Team appearance statistics
+- Upcoming match schedule
+- Match pattern detection
+
+### 4. Sharp Movement Detector
+- Detects sudden changes in match activity
+- Tracks score event intensity
+- Logs significant movements
+
+## 🛠️ Tech Stack
+
+| Layer | Technology |
+|-------|------------|
+| **Backend** | Node.js, Express |
+| **Frontend** | HTML, CSS, JavaScript |
+| **API** | TxLINE (Devnet) |
+| **Deployment** | Vercel |
+| **Authentication** | JWT + API Token |
+
+## 📁 Project Structure
+
+```
+txline-worldcup-agent/
+├── api/
+│   └── server.js          # API endpoint for matches
+├── public/
+│   └── index.html         # Dashboard frontend
+├── src/
+│   ├── live_monitor.js    # Live match monitoring
+│   ├── dashboard.js       # Match dashboard
+│   ├── pattern_analyzer.js # Pattern analysis
+│   ├── agent_arena.js     # Agent competition
+│   ├── sharp_detector.js  # Sharp movement detection
+│   └── realtime_monitor.js # Realtime updates
+├── scripts/
+│   ├── test_token.js      # API token testing
+│   └── subscribe.js       # On-chain subscription
+├── .env.example           # Environment template
+├── vercel.json            # Vercel deployment config
+├── package.json           # Dependencies
+├── README.md              # This file
+└── CHANGELOG.md           # Version history
+```
+
+## 🔧 Installation
 
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/Freedomwithin/txline-agent.git
-cd txline-agent
+git clone https://github.com/Freedomwithin/txline-worldcup-agent.git
+cd txline-worldcup-agent
 ```
 
 ### 2. Install Dependencies
@@ -36,10 +98,10 @@ npm install
 
 ```bash
 cp .env.example .env
-# Edit .env with your wallet and API credentials
+# Edit .env with your TxLINE credentials
 ```
 
-### 4. Get Your API Token
+### 4. Get TxLINE API Token
 
 ```bash
 # Get a guest JWT
@@ -52,149 +114,62 @@ ANCHOR_WALLET="./_keys/testuser-wallet-1.json" \
 yarn ts-node examples/devnet/scripts/subscription_free_tier.ts
 ```
 
-## Usage
-
-### Live Monitor
-
-Monitor matches that are currently live or starting soon:
+### 5. Run Locally
 
 ```bash
-node src/live_monitor.js
+# Development mode
+vercel dev
+
+# Production mode
+node server.js
 ```
 
-Output:
-```
-🔴 Live Score Monitor Starting...
-================================
+## 🚀 Deployment
 
-📊 Found 5 World Cup fixtures
-
-🏟️  France vs Spain
-   Status: 🔴 LIVE/SOON
-   Start: 7/14/2026, 3:00:00 PM
-   ⏰ 45 minutes until kickoff
-```
-
-### Dashboard
-
-View all World Cup fixtures with status indicators:
+Deployed on Vercel with automatic deployments from GitHub:
 
 ```bash
-node src/dashboard.js
+# Deploy to production
+vercel --prod
 ```
 
-Output:
-```
-📊 WORLD CUP DASHBOARD
-======================
-
-📅 MATCH SCHEDULE
------------------
-
-🔴 France vs Spain
-   📍 7/14/2026 at 3:00:00 PM
-
-⏳ England vs Argentina
-   📍 7/15/2026 at 3:00:00 PM
-```
-
-### Pattern Analysis
-
-Analyze team patterns and competition statistics:
-
-```bash
-node src/pattern_analyzer.js
-```
-
-Output:
-```
-📊 PATTERN ANALYSIS
-===================
-
-🏆 Competitions:
-   World Cup: 2 matches
-   Friendlies: 3 matches
-
-⚽ Top Teams:
-   France: 1 appearances
-   Spain: 1 appearances
-   England: 1 appearances
-```
-
-## Project Structure
-
-```
-txline-agent/
-├── src/
-│   ├── live_monitor.js      # Live match monitoring
-│   ├── dashboard.js         # Match dashboard
-│   ├── pattern_analyzer.js  # Pattern analysis
-│   └── enhanced_agent.js    # Main agent with all features
-├── scripts/
-│   ├── test_token.js        # API token testing
-│   └── subscribe.js         # On-chain subscription
-├── .env                     # Environment variables
-├── .jwt                     # Guest JWT
-├── .apitoken                # API token
-├── README.md                # This file
-└── CHANGELOG.md             # Version history
-```
-
-## Configuration
-
-### .env File
-
-```env
-NETWORK=devnet
-SOLANA_RPC=https://api.devnet.solana.com
-TXLINE_API_TOKEN=your_api_token_here
-TXLINE_API_URL=https://txline-dev.txodds.com/api
-```
-
-### API Endpoints
+## 📊 API Endpoints
 
 | Endpoint | Method | Description |
 |----------|--------|-------------|
-| `/fixtures/snapshot` | GET | Get current fixtures |
-| `/scores/historical/{fixtureId}` | GET | Get historical scores |
-| `/odds/snapshot` | GET | Get odds (limited availability) |
+| `/api/matches` | GET | Returns all matches with status |
+| `/api/matches?worldcup=true` | GET | Returns only World Cup matches |
 
-## Features
+## 🏗️ TxLINE Endpoints Used
 
-### ✅ Implemented
-- Fixture fetching
-- Match categorization (Live/Upcoming/Historic)
-- Score checking for completed matches
-- Pattern analysis
-- Dashboard view
+| Endpoint | Description |
+|----------|-------------|
+| `/fixtures/snapshot` | Get current fixtures |
+| `/scores/historical/{fixtureId}` | Get historical scores |
 
-### 🚧 In Progress
-- Real-time odds monitoring
-- Sharp movement detection
-- Agent vs Agent arena
-- Telegram/Slack alerts
+## 📝 Scripts
 
-## Troubleshooting
+| Command | Description |
+|---------|-------------|
+| `npm start` | Run the web server |
+| `npm run monitor` | Live match monitoring |
+| `npm run dashboard` | Show dashboard |
+| `npm run analyze` | Pattern analysis |
+| `npm run arena` | Agent vs Agent competition |
 
-### "404 - Not Found"
-- Some endpoints may not be available on devnet
-- Use `/fixtures/snapshot` instead of `/fixtures`
-- Use `/scores/historical/{fixtureId}` for scores
+## 🤝 Contributing
 
-### "401 - Unauthorized"
-- Your JWT may have expired
-- Get a fresh JWT: `curl -X POST https://txline-dev.txodds.com/auth/guest/start`
+Contributions are welcome! Feel free to open issues or submit pull requests.
 
-### "Missing API token"
-- Your API token may not be activated
-- Run the subscription script to activate
-
-## Resources
-
-- [TxLINE Documentation](https://txline.txodds.com/documentation/quickstart)
-- [World Cup Free Tier](https://txline.txodds.com/documentation/worldcup)
-- [TxLINE GitHub](https://github.com/txodds/tx-on-chain)
-
-## License
+## 📄 License
 
 MIT © 2026 Jonathon Koerner
+
+## 🙏 Acknowledgments
+
+- [TxLINE](https://txline.txodds.com) for the sports data API
+- [Superteam](https://earn.superteam.fun) for the hackathon
+- [Solana](https://solana.com) for the blockchain infrastructure
+
+---
+Built for the TxLINE World Cup Hackathon 🏆
