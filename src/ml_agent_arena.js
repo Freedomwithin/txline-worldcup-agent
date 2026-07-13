@@ -6,22 +6,27 @@ class MLAgentArena {
     this.results = [];
     this.leaderboard = [];
     this.lastPredictions = {};
+    this.nextMatchPrediction = null;
     this.initializeAgents();
   }
 
   initializeAgents() {
+    const STARTING_BANKROLL = 1000;  // $1,000 starting balance
+
     this.agents.push({
       name: 'ML Prophet',
       strategy: 'ML Pattern Detection',
       type: 'ml',
       detector: new MLPatternDetector(),
-      bankroll: 10000,
+      bankroll: STARTING_BANKROLL,
       trades: [],
       wins: 0,
       losses: 0,
       lastAction: 'Waiting for data...',
       lastConfidence: null,
-      lastPrediction: null
+      lastPrediction: null,
+      nextPrediction: null,
+      nextConfidence: null
     });
 
     this.agents.push({
@@ -29,13 +34,15 @@ class MLAgentArena {
       strategy: 'ML + Market Sentiment',
       type: 'sentiment',
       detector: new MLPatternDetector(),
-      bankroll: 10000,
+      bankroll: STARTING_BANKROLL,
       trades: [],
       wins: 0,
       losses: 0,
       lastAction: 'Waiting for data...',
       lastConfidence: null,
-      lastPrediction: null
+      lastPrediction: null,
+      nextPrediction: null,
+      nextConfidence: null
     });
 
     this.agents.push({
@@ -43,14 +50,37 @@ class MLAgentArena {
       strategy: 'Follows Trends',
       type: 'simple',
       detector: new MLPatternDetector(),
-      bankroll: 10000,
+      bankroll: STARTING_BANKROLL,
       trades: [],
       wins: 0,
       losses: 0,
       lastAction: 'Waiting for data...',
       lastConfidence: null,
-      lastPrediction: null
+      lastPrediction: null,
+      nextPrediction: null,
+      nextConfidence: null
     });
+  }
+
+  setNextMatchPredictions(nextMatch) {
+    if (!nextMatch) return;
+    
+    for (const agent of this.agents) {
+      try {
+        if (agent.detector && typeof agent.detector.predict === 'function') {
+          const prediction = agent.detector.predict(nextMatch);
+          if (prediction) {
+            agent.nextPrediction = prediction.prediction;
+            agent.nextConfidence = Math.round(prediction.confidence * 100);
+            agent.lastAction = `${prediction.prediction} (${agent.nextConfidence}% confidence)`;
+            agent.lastPrediction = prediction.prediction;
+            agent.lastConfidence = agent.nextConfidence;
+          }
+        }
+      } catch (error) {
+        console.error(`❌ Error getting next prediction from ${agent.name}:`, error.message);
+      }
+    }
   }
 
   getPredictions(match) {
@@ -65,12 +95,7 @@ class MLAgentArena {
               confidence: Math.round(prediction.confidence * 100),
               reason: prediction.reason
             };
-            agent.lastPrediction = prediction.prediction;
-            agent.lastConfidence = Math.round(prediction.confidence * 100);
-            agent.lastAction = `${prediction.prediction} (${Math.round(prediction.confidence * 100)}% confidence)`;
           }
-        } else {
-          console.warn(`⚠️ Agent ${agent.name} has no predict method`);
         }
       } catch (error) {
         console.error(`❌ Error getting prediction from ${agent.name}:`, error.message);
@@ -106,8 +131,8 @@ class MLAgentArena {
         ? (agent.wins / agent.trades.length * 100).toFixed(1) + '%' 
         : '0%',
       lastAction: agent.lastAction || 'Waiting for data...',
-      lastConfidence: agent.lastConfidence,
-      lastPrediction: agent.lastPrediction
+      lastConfidence: agent.nextConfidence || agent.lastConfidence,
+      lastPrediction: agent.nextPrediction || agent.lastPrediction || 'HOLD'
     }));
   }
 
