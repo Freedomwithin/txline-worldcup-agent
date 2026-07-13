@@ -19,5 +19,9 @@
       "src": "/(.*)",
       "dest": "/public/$1"
     }
-  ]
+  ],
+  "env": {
+    "TXLINE_JWT": "@txline_jwt",
+    "TXLINE_API_TOKEN": "@txline_api_token"
+  }
 }
