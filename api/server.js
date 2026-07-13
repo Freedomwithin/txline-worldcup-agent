@@ -26,7 +26,7 @@ function loadCredentials() {
   return { jwt, apiToken };
 }
 
-// Agent classes for the arena
+// Agent classes
 class BaseAgent {
   constructor(name, strategy) {
     this.name = name;
@@ -62,6 +62,7 @@ class MomentumAgent extends BaseAgent {
 
   makeDecision(fixture, scores) {
     if (!scores || !Array.isArray(scores) || scores.length < 2) {
+      this.lastAction = `⏳ Waiting for activity on ${fixture.Participant1} vs ${fixture.Participant2}`;
       return null;
     }
     
@@ -88,12 +89,13 @@ class ContrarianAgent extends BaseAgent {
 
   makeDecision(fixture, scores) {
     if (!scores || !Array.isArray(scores) || scores.length < 3) {
+      this.lastAction = `⏳ Waiting for high activity on ${fixture.Participant1} vs ${fixture.Participant2}`;
       return null;
     }
     
     const recentActivity = scores.slice(-5);
     if (recentActivity.length > 8) {
-      this.lastAction = `📉 Monitoring ${fixture.Participant1} vs ${fixture.Participant2}`;
+      this.lastAction = `📉 Fading ${fixture.Participant1} vs ${fixture.Participant2}`;
       return {
         action: 'SELL',
         confidence: 0.65,
@@ -130,7 +132,6 @@ module.exports = async (req, res) => {
 
     const baseUrl = 'https://txline-dev.txodds.com/api';
     
-    // Fetch fixtures
     const response = await axios.get(
       baseUrl + '/fixtures/snapshot?limit=20',
       {
@@ -145,12 +146,10 @@ module.exports = async (req, res) => {
     const fixtures = response.data || [];
     const now = Date.now();
     
-    // Initialize agents
     const momentum = new MomentumAgent();
     const contrarian = new ContrarianAgent();
     const agentDecisions = [];
 
-    // Process each fixture
     const matches = [];
     for (const fixture of fixtures) {
       const startTime = fixture.StartTime || 0;
@@ -163,9 +162,7 @@ module.exports = async (req, res) => {
       else if (isSoon) status = 'soon';
       else if (isCompleted) status = 'completed';
       
-      // Fetch scores for live or completed matches
       let scores = null;
-      let scoreSummary = null;
       let eventCount = 0;
       
       if (isLive || isCompleted) {
@@ -183,14 +180,12 @@ module.exports = async (req, res) => {
           scores = scoresRes.data;
           if (scores && Array.isArray(scores)) {
             eventCount = scores.length;
-            scoreSummary = scores.slice(-3);
           }
         } catch (e) {
           // No scores available
         }
       }
       
-      // Get agent decisions
       const decision = {
         momentum: momentum.makeDecision(fixture, scores),
         contrarian: contrarian.makeDecision(fixture, scores)
@@ -214,13 +209,11 @@ module.exports = async (req, res) => {
         isSoon: isSoon,
         isCompleted: isCompleted,
         isWorldCup: fixture.Competition === 'World Cup',
-        scores: scoreSummary,
         eventCount: eventCount,
         hasScores: scores !== null && scores.length > 0
       });
     }
 
-    // Get agent stats
     const agentStats = {
       momentum: momentum.getStats(),
       contrarian: contrarian.getStats()

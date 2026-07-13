@@ -1,13 +1,31 @@
-// Send alerts to Telegram when matches start or scores change
+const axios = require('axios');
+
 class TelegramBot {
-  async sendAlert(message) {
-    const token = process.env.TELEGRAM_BOT_TOKEN;
-    const chatId = process.env.TELEGRAM_CHAT_ID;
-    if (!token || !chatId) return;
-    
-    await axios.post(`https://api.telegram.org/bot${token}/sendMessage`, {
-      chat_id: chatId,
-      text: message
-    });
+  constructor(token, chatId) {
+    this.token = token;
+    this.chatId = chatId;
+    this.apiUrl = `https://api.telegram.org/bot${token}`;
+  }
+
+  async sendMessage(text) {
+    try {
+      await axios.post(`${this.apiUrl}/sendMessage`, {
+        chat_id: this.chatId,
+        text: text,
+        parse_mode: 'HTML'
+      });
+    } catch (error) {
+      console.error('Telegram error:', error.message);
+    }
+  }
+
+  async sendMatchAlert(match) {
+    const message = `
+⚽ <b>${match.home} vs ${match.away}</b>
+🕐 ${new Date(match.startTime).toLocaleString()}
+🏆 ${match.competition}
+${match.isLive ? '🔴 LIVE NOW' : '⏳ Upcoming'}
+    `;
+    await this.sendMessage(message);
   }
 }

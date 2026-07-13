@@ -30,6 +30,7 @@
     }
     .subtitle { color: #888; font-size: 0.9rem; }
     .timestamp { color: #555; font-size: 0.8rem; }
+    
     .stats-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
@@ -42,7 +43,10 @@
       border-radius: 12px;
       text-align: center;
       border: 1px solid #2a2a4e;
+      cursor: pointer;
+      transition: all 0.2s;
     }
+    .stat-card:hover { background: #222244; transform: translateY(-2px); }
     .stat-card .number { font-size: 2rem; font-weight: 700; color: #818cf8; }
     .stat-card .label { font-size: 0.8rem; color: #888; margin-top: 4px; }
     .stat-card.live .number { color: #ff4444; }
@@ -67,6 +71,7 @@
       gap: 20px;
       margin-top: 10px;
       font-size: 0.9rem;
+      flex-wrap: wrap;
     }
     .agent-card .stats-row span { color: #aaa; }
     .agent-card .last-action { 
@@ -90,8 +95,9 @@
       flex-wrap: wrap;
       border-left: 4px solid #444;
       transition: all 0.2s;
+      cursor: pointer;
     }
-    .match:hover { background: #222244; }
+    .match:hover { background: #222244; transform: translateX(4px); }
     .match.live { border-left-color: #ff4444; background: #1a0a0a; }
     .match.soon { border-left-color: #ffaa44; }
     .match.completed { border-left-color: #44aa44; }
@@ -123,6 +129,58 @@
       50% { opacity: 0.5; }
     }
     
+    .match-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    
+    /* Modal Styles */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.8);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+    }
+    .modal.active { display: flex; }
+    .modal-content {
+      background: #1a1a2e;
+      border-radius: 16px;
+      padding: 30px;
+      max-width: 600px;
+      width: 90%;
+      max-height: 80vh;
+      overflow-y: auto;
+      border: 1px solid #2a2a4e;
+    }
+    .modal-content h2 { 
+      font-size: 1.5rem; 
+      margin-bottom: 10px;
+      color: #818cf8;
+    }
+    .modal-content .close {
+      float: right;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: #888;
+    }
+    .modal-content .close:hover { color: #fff; }
+    .modal-content .detail-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 8px 0;
+      border-bottom: 1px solid #2a2a4e;
+    }
+    .modal-content .detail-row .label { color: #888; }
+    .modal-content .detail-row .value { color: #fff; font-weight: 600; }
+    
     .footer { 
       margin-top: 40px; 
       text-align: center; 
@@ -135,17 +193,11 @@
     .loading { text-align: center; padding: 60px 0; color: #888; }
     .error { color: #ff4444; text-align: center; padding: 40px; background: #1a0a0a; border-radius: 12px; border: 1px solid #ff444433; }
     
-    .match-right {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      flex-wrap: wrap;
-    }
-    
     @media (max-width: 600px) {
       .agents-section { grid-template-columns: 1fr; }
       .match { flex-direction: column; align-items: flex-start; gap: 10px; }
       .match-right { width: 100%; justify-content: flex-start; }
+      .modal-content { padding: 20px; }
     }
   </style>
 </head>
@@ -200,7 +252,57 @@
     </div>
   </div>
 
+  <!-- Match Detail Modal -->
+  <div class="modal" id="matchModal">
+    <div class="modal-content">
+      <span class="close" onclick="closeModal()">&times;</span>
+      <h2 id="modal-title">Match Details</h2>
+      <div id="modal-body"></div>
+    </div>
+  </div>
+
   <script>
+    // Agent history tracking
+    let agentHistory = {
+      momentum: [],
+      contrarian: []
+    };
+
+    let allMatches = [];
+
+    function openModal(match) {
+      const modal = document.getElementById('matchModal');
+      document.getElementById('modal-title').textContent = match.home + ' vs ' + match.away;
+      
+      const body = document.getElementById('modal-body');
+      body.innerHTML = `
+        <div class="detail-row"><span class="label">Competition</span><span class="value">${match.competition}</span></div>
+        <div class="detail-row"><span class="label">Status</span><span class="value">${match.isLive ? '🔴 LIVE' : match.status === 'soon' ? '🟡 SOON' : match.status === 'completed' ? '✅ Completed' : '⏳ Upcoming'}</span></div>
+        <div class="detail-row"><span class="label">Start Time</span><span class="value">${new Date(match.startTime).toLocaleString()}</span></div>
+        <div class="detail-row"><span class="label">World Cup</span><span class="value">${match.isWorldCup ? '🏆 Yes' : 'No'}</span></div>
+        <div class="detail-row"><span class="label">Events</span><span class="value">${match.eventCount || 0}</span></div>
+        ${match.hasScores ? `<div class="detail-row"><span class="label">Scores Available</span><span class="value">✅ Yes</span></div>` : ''}
+        <div style="margin-top: 16px; padding: 12px; background: #0a0a0f; border-radius: 8px; border-left: 3px solid #818cf8;">
+          <div style="color: #888; font-size: 0.8rem;">Agent Activity</div>
+          <div style="font-size: 0.9rem; margin-top: 4px; color: #fbbf24;">${match.agentActivity || 'No agent activity yet'}</div>
+        </div>
+        <div style="margin-top: 12px; text-align: center;">
+          <button onclick="closeModal()" style="background: #6366f1; color: #fff; border: none; padding: 8px 24px; border-radius: 8px; cursor: pointer; font-size: 0.9rem;">Close</button>
+        </div>
+      `;
+      
+      modal.classList.add('active');
+    }
+
+    function closeModal() {
+      document.getElementById('matchModal').classList.remove('active');
+    }
+
+    // Close modal on outside click
+    document.getElementById('matchModal').addEventListener('click', function(e) {
+      if (e.target === this) closeModal();
+    });
+
     async function loadMatches() {
       const matchesDiv = document.getElementById('matches');
       
@@ -240,40 +342,70 @@
           document.getElementById('con-wins').textContent = con.wins;
           document.getElementById('con-losses').textContent = con.losses;
           document.getElementById('con-action').textContent = con.lastAction || '⏳ Waiting for data...';
+          
+          // Store agent history
+          agentHistory.momentum.push({
+            time: data.timestamp,
+            bankroll: mom.bankroll,
+            trades: mom.trades
+          });
+          agentHistory.contrarian.push({
+            time: data.timestamp,
+            bankroll: con.bankroll,
+            trades: con.trades
+          });
+          
+          // Keep only last 50 entries
+          if (agentHistory.momentum.length > 50) {
+            agentHistory.momentum.shift();
+            agentHistory.contrarian.shift();
+          }
         }
         
-        const matches = data.data || [];
+        allMatches = data.data || [];
         
         // Update stats
-        const live = matches.filter(m => m.isLive).length;
-        const upcoming = matches.filter(m => m.status === 'upcoming').length;
-        const completed = matches.filter(m => m.status === 'completed').length;
-        const worldcup = matches.filter(m => m.isWorldCup).length;
+        const live = allMatches.filter(m => m.isLive).length;
+        const upcoming = allMatches.filter(m => m.status === 'upcoming').length;
+        const completed = allMatches.filter(m => m.status === 'completed').length;
+        const worldcup = allMatches.filter(m => m.isWorldCup).length;
         
-        document.getElementById('total').textContent = matches.length;
+        document.getElementById('total').textContent = allMatches.length;
         document.getElementById('live').textContent = live;
         document.getElementById('upcoming').textContent = upcoming;
         document.getElementById('completed').textContent = completed;
         document.getElementById('worldcup').textContent = worldcup;
         
         // Render matches
-        if (matches.length === 0) {
+        if (allMatches.length === 0) {
           matchesDiv.innerHTML = '<div class="loading">No matches found.</div>';
           return;
         }
         
-        const html = matches.map(m => {
+        const html = allMatches.map(m => {
           const badgeClass = m.isLive ? 'live' : m.status === 'soon' ? 'soon' : m.status === 'completed' ? 'completed' : 'upcoming';
           const badgeText = m.isLive ? '🔴 LIVE' : m.status === 'soon' ? '🟡 SOON' : m.status === 'completed' ? '✅ DONE' : '⏳ UPCOMING';
           const wcBadge = m.isWorldCup ? '<span class="badge worldcup">🏆 World Cup</span>' : '';
           const eventBadge = m.eventCount > 0 ? `<span class="badge event">📊 ${m.eventCount} events</span>` : '';
-          const scoreDisplay = m.hasScores && m.scores ? 
-            `<div class="scores">⚽ ${m.scores.length} events</div>` : 
-            (m.isLive ? '<div class="scores">🔴 Live</div>' : '');
+          const scoreDisplay = m.hasScores ? `<div class="scores">⚽ ${m.eventCount} events</div>` : '';
           const time = new Date(m.startTime).toLocaleString();
           
+          // Agent activity for this match
+          let agentActivity = 'No agent activity';
+          if (data.decisions) {
+            const decision = data.decisions.find(d => d.fixture === m.home + ' vs ' + m.away);
+            if (decision) {
+              if (decision.decisions.momentum) {
+                agentActivity = `Momentum: ${decision.decisions.momentum.action} (${(decision.decisions.momentum.confidence * 100).toFixed(0)}%)`;
+              }
+              if (decision.decisions.contrarian) {
+                agentActivity += ` | Contrarian: ${decision.decisions.contrarian.action}`;
+              }
+            }
+          }
+          
           return `
-            <div class="match ${badgeClass}">
+            <div class="match ${badgeClass}" onclick='openModal(${JSON.stringify({...m, agentActivity})})'>
               <div>
                 <div class="teams">${m.home} vs ${m.away}</div>
                 <div class="details">${time} · ${m.competition}</div>
@@ -295,7 +427,6 @@
       }
     }
     
-    // Load immediately and every 30 seconds
     loadMatches();
     setInterval(loadMatches, 30000);
   </script>
