@@ -1,202 +1,137 @@
 # 🌍 TxLINE World Cup Agent
 
-A real-time agent for monitoring World Cup matches using TxLINE's Solana-powered sports data API. Live dashboard, agent arena, and pattern analysis all in one.
+A real-time agent for monitoring World Cup matches using TxLINE's Solana-powered sports data API. Features 3 ML-powered agents competing in an arena.
 
 [![Live Demo](https://img.shields.io/badge/Live_Demo-Vercel-000?style=for-the-badge&logo=vercel)](https://txline-worldcup-agent.vercel.app)
+[![Analytics](https://img.shields.io/badge/Analytics-Dashboard-6366f1?style=for-the-badge)](https://txline-worldcup-agent.vercel.app/analytics.html)
 [![GitHub](https://img.shields.io/badge/GitHub-Freedomwithin-181717?style=for-the-badge&logo=github)](https://github.com/Freedomwithin/txline-worldcup-agent)
-[![TxLINE](https://img.shields.io/badge/Powered_By-TxLINE-FF5722?style=for-the-badge)](https://txline.txodds.com)
+
+---
 
 ## 🚀 Live Demo
 
-**View the live dashboard:** [https://txline-worldcup-agent.vercel.app](https://txline-worldcup-agent.vercel.app)
+**Main Dashboard:** [txline-worldcup-agent.vercel.app](https://txline-worldcup-agent.vercel.app)
 
-The dashboard shows:
-- 🔴 Live matches currently in progress
-- 📅 Upcoming matches with start times
-- ✅ Completed matches
-- 🏆 World Cup match identification
-- 📊 Agent activity and performance
+**Analytics Dashboard:** [txline-worldcup-agent.vercel.app/analytics.html](https://txline-worldcup-agent.vercel.app/analytics.html)
+
+---
 
 ## 📊 Features
 
-### 1. Live Dashboard
-- Real-time match monitoring with auto-refresh (30 seconds)
-- Match status indicators (Live/Soon/Upcoming/Completed)
-- World Cup match badges
-- Statistics: total, live, upcoming, completed, World Cup count
-- Click on any match for detailed information
-
-### 2. Agent Arena
-Two competing agents analyze the same data:
+### 🤖 ML-Powered Agents
 
 | Agent | Strategy | Description |
 |-------|----------|-------------|
-| **Momentum Agent** | Follows trends | Buys when activity increases |
-| **Contrarian Agent** | Fades trends | Sells when activity is high |
+| 🧠 **ML Prophet** | ML Pattern Detection | Uses statistical ML to detect patterns in match data |
+| 🤖 **Sentinel AI** | ML + Market Sentiment | Combines ML with market sentiment analysis |
+| 📈 **Simple Momentum** | Follows Trends | Baseline agent for comparison |
 
-### 3. Match Detail View
-Click any match to see:
-- Competition and status
-- Start time
-- Agent activity for that match
-- Event count and scores availability
+### 📈 Analytics Dashboard
 
-### 4. Agent Performance History
-- Tracks bankroll, trades, wins, and losses
-- Updates in real-time
-- Shows last action for each agent
+- Bankroll comparison charts
+- Win rate distribution
+- Trade history visualization
+- Performance radar chart
 
-### 5. Pattern Analysis
-- Competition breakdown
-- Team appearance statistics
-- Upcoming match schedule
-- Match pattern detection
+### 🎯 Live Dashboard
 
-### 6. Sharp Movement Detector
-- Detects sudden changes in match activity
-- Tracks score event intensity
-- Logs significant movements
+- Real-time match monitoring
+- Auto-refresh every 30 seconds
+- Match status indicators (Live/Soon/Upcoming/Completed)
+- World Cup match badges
+- Click for match details
+
+---
 
 ## 🛠️ Tech Stack
 
 | Layer | Technology |
 |-------|------------|
 | **Backend** | Node.js, Express |
-| **Frontend** | HTML, CSS, JavaScript |
+| **Frontend** | HTML, CSS, JavaScript, Chart.js |
 | **API** | TxLINE (Devnet) |
 | **Deployment** | Vercel |
 | **Authentication** | JWT + API Token |
+
+---
 
 ## 📁 Project Structure
 
 ```
 txline-worldcup-agent/
 ├── api/
-│   └── server.js          # API endpoint for matches with agent logic
+│   └── server.js              # API with ML agent logic
 ├── public/
-│   └── index.html         # Dashboard frontend with match detail modal
+│   ├── index.html             # Main dashboard
+│   └── analytics.html         # Analytics dashboard
 ├── src/
-│   ├── live_monitor.js    # Live match monitoring
-│   ├── dashboard.js       # Match dashboard
-│   ├── pattern_analyzer.js # Pattern analysis
-│   ├── agent_arena.js     # Agent competition
-│   └── sharp_detector.js  # Sharp movement detection
-├── scripts/
-│   ├── test_token.js      # API token testing
-│   └── subscribe.js       # On-chain subscription
-├── .env.example           # Environment template
-├── vercel.json            # Vercel deployment config
-├── package.json           # Dependencies
-├── README.md              # This file
-└── CHANGELOG.md           # Version history
+│   ├── ml_agent.js            # ML pattern detector
+│   ├── ml_agent_arena.js      # 3-agent arena
+│   ├── live_monitor.js        # Live match monitoring
+│   ├── pattern_analyzer.js    # Pattern analysis
+│   └── agent_arena.js         # Original agent arena
+├── package.json
+├── vercel.json
+├── README.md
+└── CHANGELOG.md
 ```
 
-## 🔧 Installation
+---
 
-### 1. Clone the Repository
+## 🔧 Installation
 
 ```bash
 git clone https://github.com/Freedomwithin/txline-worldcup-agent.git
 cd txline-worldcup-agent
-```
-
-### 2. Install Dependencies
-
-```bash
 npm install
-```
-
-### 3. Set Up Environment
-
-```bash
 cp .env.example .env
 # Edit .env with your TxLINE credentials
 ```
 
-### 4. Get TxLINE API Token
-
-```bash
-# Get a guest JWT
-curl -X POST https://txline-dev.txodds.com/auth/guest/start
-
-# Run the subscription script
-TOKEN_MINT_ADDRESS=4Zao8ocPhmMgq7PdsYWyxvqySMGx7xb9cMftPMkEokRG \
-ANCHOR_PROVIDER_URL="https://api.devnet.solana.com" \
-ANCHOR_WALLET="./_keys/testuser-wallet-1.json" \
-yarn ts-node examples/devnet/scripts/subscription_free_tier.ts
-```
-
-### 5. Run Locally
-
-```bash
-# Development mode
-vercel dev
-
-# Production mode
-node server.js
-```
+---
 
 ## 🚀 Deployment
 
-Deployed on Vercel with automatic deployments from GitHub:
-
 ```bash
-# Deploy to production
+# Deploy to Vercel
 vercel --prod
 ```
 
-## 📊 API Endpoints
+---
 
-| Endpoint | Method | Description |
-|----------|--------|-------------|
-| `/api/matches` | GET | Returns all matches with status, agent activity, and performance |
+## 📝 Update Log
 
-### Example Response
+<!-- 
+================================================================================
+UPDATE INSTRUCTIONS:
+When adding a new feature, add it to the "Latest Updates" section below.
+Move older updates to the CHANGELOG.md file.
+================================================================================
+-->
 
-```json
-{
-  "success": true,
-  "count": 5,
-  "data": [...],
-  "agents": {
-    "momentum": { "bankroll": 10000, "trades": 0, ... },
-    "contrarian": { "bankroll": 10000, "trades": 0, ... }
-  },
-  "decisions": [...],
-  "timestamp": "2026-07-12T..."
-}
-```
+### Latest Updates (v0.5.0)
 
-## 🏗️ TxLINE Endpoints Used
+| Date | Feature | Description |
+|------|---------|-------------|
+| 2026-07-13 | 🤖 3 ML Agents | Added ML Prophet, Sentinel AI, Simple Momentum |
+| 2026-07-13 | 📊 Analytics Dashboard | Added Chart.js visualizations |
+| 2026-07-12 | 🔍 Match Detail Modal | Click matches for detailed info |
+| 2026-07-12 | 🚀 Vercel Deployment | Live at txline-worldcup-agent.vercel.app |
+
+---
+
+## 📋 TxLINE Endpoints Used
 
 | Endpoint | Description |
 |----------|-------------|
 | `/fixtures/snapshot` | Get current fixtures |
 | `/scores/historical/{fixtureId}` | Get historical scores |
 
-## 📝 Scripts
-
-| Command | Description |
-|---------|-------------|
-| `npm start` | Run the web server |
-| `npm run monitor` | Live match monitoring |
-| `npm run dashboard` | Show dashboard |
-| `npm run analyze` | Pattern analysis |
-| `npm run arena` | Agent vs Agent competition |
-
-## 🤝 Contributing
-
-Contributions are welcome! Feel free to open issues or submit pull requests.
+---
 
 ## 📄 License
 
 MIT © 2026 Jonathon Koerner
-
-## 🙏 Acknowledgments
-
-- [TxLINE](https://txline.txodds.com) for the sports data API
-- [Superteam](https://earn.superteam.fun) for the hackathon
-- [Solana](https://solana.com) for the blockchain infrastructure
 
 ---
 Built for the TxLINE World Cup Hackathon 🏆
