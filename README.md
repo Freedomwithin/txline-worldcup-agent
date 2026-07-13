@@ -1,14 +1,15 @@
 # TxLINE World Cup Agent
 
-**Version:** 0.8.1
+**Version:** 0.8.2
 
-Autonomous multi-agent trading system built on TxLINE's live World Cup data feed. Three independent agents run competing strategies against the same real-time feed, with all decisions, bankrolls, and outcomes tracked and exposed through a live dashboard.
+Autonomous multi-agent trading system built on TxLINE's live World Cup data feed. Three independent agents run competing strategies against the same real-time feed, with all decisions, bankrolls, and outcomes tracked and exposed through a live dashboard and Telegram alerts.
 
 Built for Superteam's Trading Tools & Agents track (TxLINE World Cup Hackathon).
 
 [![Live Demo](https://img.shields.io/badge/Live_Demo-Vercel-000?style=for-the-badge&logo=vercel)](https://txline-worldcup-agent.vercel.app)
 [![Analytics](https://img.shields.io/badge/Analytics-Dashboard-35d17d?style=for-the-badge)](https://txline-worldcup-agent.vercel.app/analytics.html)
 [![GitHub](https://img.shields.io/badge/GitHub-Freedomwithin-181717?style=for-the-badge&logo=github)](https://github.com/Freedomwithin/txline-worldcup-agent)
+[![Telegram](https://img.shields.io/badge/Telegram-Bot-26A5E4?style=for-the-badge&logo=telegram)](https://t.me/worldcup_agent_bot)
 
 ---
 
@@ -28,6 +29,7 @@ Three ML-driven agents read the same TxLINE feed and each execute an independent
 
 **Live Dashboard:** [txline-worldcup-agent.vercel.app](https://txline-worldcup-agent.vercel.app)
 **Analytics:** [txline-worldcup-agent.vercel.app/analytics.html](https://txline-worldcup-agent.vercel.app/analytics.html)
+**Telegram Bot:** [@worldcup_agent_bot](https://t.me/worldcup_agent_bot)
 
 ---
 
@@ -46,7 +48,8 @@ TxLINE feed (fixtures + scores)
   Agent state (bankroll, trades, win/loss) written per cycle
         │
         ├──► /api/matches   → live dashboard (fixtures, agent status, predictions)
-        └──► /api/history   → analytics dashboard (throttled 15-min snapshots)
+        ├──► /api/history   → analytics dashboard (throttled 15-min snapshots)
+        └──► Telegram Bot   → match alerts, leaderboard updates
 ```
 
 Agents act independently on each polling cycle. There is no manual trade approval, override, or intervention step anywhere in the loop.
@@ -82,6 +85,12 @@ Agents act independently on each polling cycle. There is no manual trade approva
 - Trade volume share
 - Bankroll trend over time, sampled at 15-minute intervals via `/api/history`
 
+### Telegram Bot
+- Live match alerts for World Cup fixtures
+- Agent predictions sent directly to your phone
+- Leaderboard updates showing top performing agent
+- Real-time notifications without needing to check the dashboard
+
 ---
 
 ## Tech Stack
@@ -94,6 +103,7 @@ Agents act independently on each polling cycle. There is no manual trade approva
 | Blockchain | Solana (Devnet) |
 | Deployment | Vercel |
 | Auth | JWT + API token |
+| Notifications | Telegram Bot API |
 
 ---
 
@@ -126,6 +136,7 @@ txline-arena-agent/
 │   ├── ml_agent_arena.js       # Multi-agent orchestration
 │   ├── history.js              # Throttled snapshot storage
 │   ├── onchain_settlement.js   # Solana devnet settlement
+│   ├── telegram_bot.js         # Telegram bot integration
 │   └── ...
 ├── data/
 │   ├── team_rankings.json      # FIFA rankings reference data
@@ -146,7 +157,7 @@ git clone https://github.com/Freedomwithin/txline-worldcup-agent.git
 cd txline-worldcup-agent
 npm install
 cp .env.example .env
-# Add TxLINE credentials to .env
+# Add TxLINE credentials and Telegram bot token to .env
 ```
 
 ## Deployment
@@ -157,12 +168,22 @@ vercel --prod
 
 ---
 
+## Telegram Bot Setup
+
+1. Create a bot with [@BotFather](https://t.me/BotFather)
+2. Get your bot token
+3. Get your chat ID by sending a message to the bot
+4. Add `TELEGRAM_BOT_TOKEN` and `TELEGRAM_CHAT_ID` to `.env`
+
+---
+
 ## Changelog
 
 See [CHANGELOG.md](./CHANGELOG.md) for full version history.
 
 | Version | Date | Key Features |
 |---------|------|--------------|
+| 0.8.2 | 2026-07-13 | Telegram bot integration, match alerts, leaderboard updates |
 | 0.8.1 | 2026-07-13 | Fixed analytics navigation, enhanced UI |
 | 0.8.0 | 2026-07-13 | Next Match countdown, Leaderboard, Confidence scores |
 | 0.7.0 | 2026-07-13 | On-chain settlement, Match Detail Modal |

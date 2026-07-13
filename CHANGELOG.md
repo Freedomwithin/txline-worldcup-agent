@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.8.2] - 2026-07-13
+
+### Added
+- **Telegram Bot Integration**: Live match alerts and agent leaderboard sent to Telegram
+- **Auto-notifications**: World Cup match alerts with agent predictions
+- **Leaderboard Updates**: Automatic top agent standings sent to Telegram
+- **Test Suite**: Telegram bot testing scripts for match alerts and leaderboard
+
+### Enhanced
+- **Notifications**: Real-time alerts for upcoming World Cup matches
+- **User Experience**: Get agent updates directly on your phone via Telegram
+
 ## [0.8.1] - 2026-07-13
 
 ### Added
