@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🌍 World Cup Agent</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { 
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #0a0a0f;
+      color: #e0e0e0;
+      min-height: 100vh;
+      padding: 20px;
+    }
+    .container { max-width: 800px; margin: 0 auto; }
+    h1 { 
+      font-size: 2rem; 
+      font-weight: 700; 
+      margin-bottom: 8px;
+      background: linear-gradient(135deg, #6366f1, #8b5cf6);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .subtitle { color: #888; margin-bottom: 30px; }
+    .stats { 
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: 12px;
+      margin-bottom: 30px;
+    }
+    .stat-card {
+      background: #1a1a2e;
+      padding: 16px;
+      border-radius: 12px;
+      text-align: center;
+    }
+    .stat-card .number { font-size: 2rem; font-weight: 700; color: #818cf8; }
+    .stat-card .label { font-size: 0.8rem; color: #888; margin-top: 4px; }
+    .match-list { display: flex; flex-direction: column; gap: 12px; }
+    .match {
+      background: #1a1a2e;
+      border-radius: 12px;
+      padding: 16px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-left: 4px solid #444;
+      transition: all 0.2s;
+    }
+    .match:hover { background: #222244; }
+    .match.live { border-left-color: #ff4444; }
+    .match.soon { border-left-color: #ffaa44; }
+    .match.completed { border-left-color: #44aa44; }
+    .match .teams { font-weight: 600; }
+    .match .badge {
+      font-size: 0.7rem;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+    .badge.live { background: #ff4444; color: #fff; }
+    .badge.soon { background: #ffaa44; color: #000; }
+    .badge.upcoming { background: #444; color: #ccc; }
+    .badge.completed { background: #44aa44; color: #fff; }
+    .badge.worldcup { background: #6366f1; color: #fff; margin-right: 8px; }
+    .footer { margin-top: 40px; text-align: center; color: #555; font-size: 0.8rem; }
+    .loading { text-align: center; padding: 60px 0; color: #888; }
+    .error { color: #ff4444; text-align: center; padding: 40px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🌍 World Cup Agent</h1>
+    <p class="subtitle">Live match monitoring powered by TxLINE</p>
+    
+    <div class="stats" id="stats">
+      <div class="stat-card"><div class="number" id="total">-</div><div class="label">Total Matches</div></div>
+      <div class="stat-card"><div class="number" id="live">-</div><div class="label">Live</div></div>
+      <div class="stat-card"><div class="number" id="upcoming">-</div><div class="label">Upcoming</div></div>
+      <div class="stat-card"><div class="number" id="completed">-</div><div class="label">Completed</div></div>
+    </div>
+    
+    <div id="matches" class="match-list">
+      <div class="loading">Loading matches...</div>
+    </div>
+    
+    <div class="footer">
+      Built for the TxLINE World Cup Hackathon · @TrustChainDev
+    </div>
+  </div>
+
+  <script>
+    async function loadMatches() {
+      try {
+        const res = await fetch('/api/matches');
+        const data = await res.json();
+        
+        if (!data.success) {
+          document.getElementById('matches').innerHTML = `<div class="error">Error: ${data.error}</div>`;
+          return;
+        }
+        
+        const matches = data.data;
+        
+        // Update stats
+        const live = matches.filter(m => m.isLive).length;
+        const upcoming = matches.filter(m => m.status === 'upcoming').length;
+        const completed = matches.filter(m => m.status === 'completed').length;
+        
+        document.getElementById('total').textContent = matches.length;
+        document.getElementById('live').textContent = live;
+        document.getElementById('upcoming').textContent = upcoming;
+        document.getElementById('completed').textContent = completed;
+        
+        // Render matches
+        if (matches.length === 0) {
+          document.getElementById('matches').innerHTML = '<div class="loading">No matches found</div>';
+          return;
+        }
+        
+        const html = matches.map(m => {
+          const badgeClass = m.isLive ? 'live' : m.status === 'soon' ? 'soon' : m.status === 'completed' ? 'completed' : 'upcoming';
+          const badgeText = m.isLive ? '🔴 LIVE' : m.status === 'soon' ? '🟡 SOON' : m.status === 'completed' ? '✅ DONE' : '⏳ UPCOMING';
+          const wcBadge = m.competition === 'World Cup' ? '<span class="badge worldcup">🏆 World Cup</span>' : '';
+          const time = new Date(m.startTime).toLocaleString();
+          return `
+            <div class="match ${badgeClass}">
+              <div>
+                <div class="teams">${m.home} vs ${m.away}</div>
+                <div style="font-size:0.8rem;color:#888;margin-top:4px;">${time}</div>
+              </div>
+              <div>
+                ${wcBadge}
+                <span class="badge ${badgeClass}">${badgeText}</span>
+              </div>
+            </div>
+          `;
+        }).join('');
+        
+        document.getElementById('matches').innerHTML = html;
+      } catch (error) {
+        document.getElementById('matches').innerHTML = `<div class="error">Failed to load: ${error.message}</div>`;
+      }
+    }
+    
+    loadMatches();
+    setInterval(loadMatches, 60000);
+  </script>
+</body>
+</html>
