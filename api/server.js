@@ -11,13 +11,11 @@ function loadCredentials() {
   let jwt = process.env.TXLINE_JWT;
   let apiToken = process.env.TXLINE_API_TOKEN;
   
-  // For Vercel, we MUST use environment variables
   if (process.env.VERCEL === '1') {
     console.log('📡 Running on Vercel - using env vars');
     return { jwt, apiToken };
   }
   
-  // For local development, try files as fallback
   if (!jwt || !apiToken) {
     try {
       const fs = require('fs');
@@ -41,13 +39,11 @@ function loadCredentials() {
 module.exports = async (req, res) => {
   console.log('📡 Request:', req.method, req.url);
   
-  // Handle history endpoint
   if (req.url === '/history' || req.url === '/api/history') {
     console.log('📊 History endpoint called');
     return handleHistory(req, res);
   }
   
-  // Handle matches endpoint
   if (req.url === '/matches' || req.url === '/api/matches') {
     console.log('📊 Matches endpoint called');
     return handleMatches(req, res);
@@ -106,7 +102,8 @@ async function handleMatches(req, res) {
       if (isLive) status = 'live';
       else if (isSoon) status = 'soon';
       
-      matches.push({
+      // Get predictions for this match
+      const matchData = {
         id: fixture.FixtureId,
         home: fixture.Participant1,
         away: fixture.Participant2,
@@ -117,19 +114,34 @@ async function handleMatches(req, res) {
         isWorldCup: fixture.Competition === 'World Cup',
         eventCount: 0,
         hasScores: false
+      };
+      
+      // Get predictions from all agents
+      const predictions = arena.getPredictions(matchData);
+      
+      matches.push({
+        ...matchData,
+        predictions: predictions
       });
     }
 
     const agentStats = arena.getStats();
+    const leaderboard = arena.getLeaderboard();
     
-    // Append to history (works in memory on Vercel)
     appendSnapshot(agentStats);
+
+    // Find next match
+    const nextMatch = matches
+      .filter(m => m.status === 'upcoming' || m.status === 'soon')
+      .sort((a, b) => new Date(a.startTime) - new Date(b.startTime))[0] || null;
 
     res.status(200).json({
       success: true,
       count: matches.length,
       data: matches,
       agents: agentStats,
+      leaderboard: leaderboard,
+      nextMatch: nextMatch,
       timestamp: new Date().toISOString()
     });
 
@@ -138,6 +150,26 @@ async function handleMatches(req, res) {
     res.status(500).json({
       success: false,
       error: error.message || 'Internal server error'
+    });
+  }
+}
+
+function handleHistory(req, res) {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Content-Type', 'application/json');
+  
+  try {
+    const history = getHistory();
+    res.status(200).json({
+      success: true,
+      data: history,
+      count: history.snapshots.length,
+      timestamp: new Date().toISOString()
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: error.message
     });
   }
 }

@@ -119,6 +119,46 @@
       font-size: 0.72rem;
       text-align: right;
     }
+    .header-right {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 8px;
+    }
+    .analytics-link {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      color: var(--grass);
+      text-decoration: none;
+      border: 1px solid var(--panel-border);
+      padding: 6px 14px;
+      border-radius: 20px;
+      transition: background 0.15s ease, border-color 0.15s ease;
+    }
+    .analytics-link:hover {
+      background: rgba(53, 209, 125, 0.08);
+      border-color: var(--grass);
+    }
+    .header-right {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 8px;
+    }
+    .analytics-link {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      color: var(--grass);
+      text-decoration: none;
+      border: 1px solid var(--panel-border);
+      padding: 6px 14px;
+      border-radius: 20px;
+      transition: background 0.15s ease, border-color 0.15s ease;
+    }
+    .analytics-link:hover {
+      background: rgba(53, 209, 125, 0.08);
+      border-color: var(--grass);
+    }
 
     /* ---------- Stats ---------- */
     .stats-grid {
@@ -317,6 +357,71 @@
 
     .match-right { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
 
+    /* Next Match Card */
+    .next-match-card {
+      background: var(--bg-alt);
+      border-radius: 12px;
+      padding: 16px 20px;
+      margin-bottom: 20px;
+      border: 1px solid var(--panel-border);
+      border-left: 4px solid var(--gold);
+    }
+    .next-match-card .countdown {
+      font-family: var(--font-mono);
+      font-size: 1.1rem;
+      color: var(--gold);
+      font-weight: 700;
+    }
+    .next-match-card .match-teams {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--white);
+    }
+    .next-match-card .match-detail {
+      color: var(--text-dim);
+      font-size: 0.8rem;
+      margin-top: 4px;
+    }
+
+    /* Leaderboard */
+    .leaderboard {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+    .leaderboard-item {
+      background: var(--bg-alt);
+      border-radius: 10px;
+      padding: 12px 18px;
+      flex: 1;
+      min-width: 120px;
+      border: 1px solid var(--panel-border-soft);
+      border-bottom: 2px solid var(--grass-dim);
+      text-align: center;
+    }
+    .leaderboard-item.rank-1 { border-bottom-color: var(--gold); }
+    .leaderboard-item.rank-1 .lb-name { color: var(--gold); }
+    .leaderboard-item .lb-name { font-weight: 700; font-size: 0.95rem; }
+    .leaderboard-item .lb-stats {
+      font-size: 0.75rem;
+      color: var(--text-dim);
+      margin-top: 4px;
+    }
+    .leaderboard-item .lb-badge {
+      display: inline-block;
+      font-size: 0.6rem;
+      padding: 2px 8px;
+      border-radius: 12px;
+      background: var(--grass-dim);
+      color: var(--grass);
+      margin-bottom: 4px;
+    }
+    .leaderboard-item.rank-1 .lb-badge {
+      background: rgba(255, 204, 77, 0.2);
+      color: var(--gold);
+    }
+
     /* ---------- Footer ---------- */
     .footer {
       margin-top: 44px;
@@ -461,7 +566,10 @@
         <h1>World Cup Agent</h1>
         <div class="subtitle">Autonomous trading agents · powered by TxLINE</div>
       </div>
-      <div class="timestamp" id="timestamp">Last updated: --</div>
+      <div class="header-right">
+  <div clasS="timestamp" id="timestamp">Last updated: --</div>
+  <a href="/analytics.html" class="analytics-link">📊 Analytics</a>
+</div>
     </div>
 
     <div class="stats-grid" id="stats">
@@ -475,6 +583,16 @@
     <div class="section-label">Trading Agents</div>
     <div class="agents-section" id="agents">
       <!-- Agents will be rendered by JavaScript -->
+    </div>
+
+    <div class="section-label">Next Match</div>
+    <div id="nextMatch" class="next-match-card">
+      <div class="loading">Loading next match…</div>
+    </div>
+
+    <div class="section-label">Agent Leaderboard</div>
+    <div id="leaderboard" class="leaderboard">
+      <div class="loading">Loading leaderboard…</div>
     </div>
 
     <div class="section-label">Fixtures</div>
@@ -547,6 +665,8 @@
 
     async function loadMatches() {
       const matchesDiv = document.getElementById('matches');
+      const nextMatchDiv = document.getElementById('nextMatch');
+      const leaderboardDiv = document.getElementById('leaderboard');
 
       try {
         const res = await fetch('/api/matches');
@@ -575,6 +695,8 @@
             const losses = Number(agent.losses || 0);
             const bankrollTrend = wins > losses ? 'up' : losses > wins ? 'down' : 'flat';
             const winRateNum = parseFloat(agent.winRate) || 0;
+            const confidence = agent.lastConfidence || 0;
+            const prediction = agent.lastPrediction || '—';
 
             return `
               <div class="agent-card">
@@ -589,6 +711,9 @@
                   <div class="winrate-track"><div class="winrate-fill" style="width:${Math.min(winRateNum, 100)}%"></div></div>
                   <div class="winrate-label"><span>Win rate</span><span>${agent.winRate || '0%'}</span></div>
                   <div class="trades-count">${agent.trades || 0} trades placed</div>
+                  <div style="margin-top:6px;font-size:0.7rem;color:var(--gold);">
+                    ${prediction} ${confidence > 0 ? '· ' + confidence + '% confidence' : ''}
+                  </div>
                 </div>
                 <div class="last-action">${agent.lastAction || 'Waiting for data...'}</div>
               </div>
@@ -613,6 +738,51 @@
         document.getElementById('upcoming').textContent = upcoming;
         document.getElementById('completed').textContent = completed;
         document.getElementById('worldcup').textContent = worldcup;
+
+        // Render next match countdown
+        if (data.nextMatch) {
+          const next = data.nextMatch;
+          const startTime = new Date(next.startTime);
+          const now = new Date();
+          const diffMs = startTime - now;
+          
+          let countdownText = 'Match starting...';
+          if (diffMs > 0) {
+            const hours = Math.floor(diffMs / (1000 * 60 * 60));
+            const mins = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
+            countdownText = `${hours}h ${mins}m until kickoff`;
+          } else if (next.isLive) {
+            countdownText = '🔴 LIVE NOW';
+          }
+          
+          nextMatchDiv.innerHTML = `
+            <div class="match-teams">${next.home} vs ${next.away}</div>
+            <div class="match-detail">${next.competition} · ${new Date(next.startTime).toLocaleString()}</div>
+            <div class="countdown">⏱️ ${countdownText}</div>
+            ${next.predictions ? `<div style="margin-top:8px;font-size:0.75rem;color:var(--text-dim);">Agent predictions available</div>` : ''}
+          `;
+        } else {
+          nextMatchDiv.innerHTML = '<div style="color:var(--text-dim);">No upcoming matches</div>';
+        }
+
+        // Render leaderboard
+        if (data.leaderboard && data.leaderboard.length > 0) {
+          const sorted = data.leaderboard.sort((a, b) => parseFloat(b.bankroll) - parseFloat(a.bankroll));
+          const lbHtml = sorted.map((agent, index) => {
+            const rankClass = index === 0 ? 'rank-1' : '';
+            const badgeText = index === 0 ? '🏆 1st' : index === 1 ? '🥈 2nd' : index === 2 ? '🥉 3rd' : `#${index + 1}`;
+            return `
+              <div class="leaderboard-item ${rankClass}">
+                <div class="lb-badge">${badgeText}</div>
+                <div class="lb-name">${agent.name}</div>
+                <div class="lb-stats">$${parseFloat(agent.bankroll).toFixed(2)} · ${agent.winRate || '0%'}</div>
+              </div>
+            `;
+          }).join('');
+          leaderboardDiv.innerHTML = lbHtml;
+        } else {
+          leaderboardDiv.innerHTML = '<div style="color:var(--text-dim);font-size:0.8rem;">No agent data yet</div>';
+        }
 
         // Render matches
         if (matches.length === 0) {

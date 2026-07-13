@@ -7,15 +7,20 @@ class MLPatternDetector {
     this.history = [];
     this.patterns = [];
     this.confidence = 0.5;
+    this.threshold = 5; // Lowered from 10 to be more sensitive
     this.loadTeamRankings();
   }
 
   loadTeamRankings() {
     try {
       const filePath = path.join(__dirname, '../data/team_rankings.json');
-      const data = JSON.parse(fs.readFileSync(filePath, 'utf8'));
-      this.teamRankings = data.teams || {};
-      console.log('✅ Team rankings loaded');
+      if (fs.existsSync(filePath)) {
+        const data = JSON.parse(fs.readFileSync(filePath, 'utf8'));
+        this.teamRankings = data.teams || {};
+        console.log('✅ Team rankings loaded');
+      } else {
+        console.log('⚠️ Team rankings file not found, using defaults');
+      }
     } catch (error) {
       console.error('Error loading team rankings:', error.message);
     }
@@ -42,25 +47,42 @@ class MLPatternDetector {
     const pointsDiff = homeStrength.points - awayStrength.points;
     
     let prediction = 'DRAW';
-    let confidence = 0.5;
+    let confidence = 0.50;
     let expectedGoals = 0;
     
-    if (rankDiff > 20) {
-      prediction = 'HOME WIN';
-      confidence = 0.7 + (rankDiff / 200);
-      expectedGoals = (homeStrength.goals_avg + awayStrength.goals_avg) / 2 + 0.3;
-    } else if (rankDiff < -20) {
-      prediction = 'AWAY WIN';
-      confidence = 0.7 + (Math.abs(rankDiff) / 200);
-      expectedGoals = (homeStrength.goals_avg + awayStrength.goals_avg) / 2 + 0.3;
+    // More aggressive prediction logic
+    if (rankDiff > this.threshold) {
+      // Home team is significantly better
+      prediction = 'BUY';
+      confidence = Math.min(0.55 + (rankDiff / 150), 0.92);
+    } else if (rankDiff < -this.threshold) {
+      // Away team is significantly better
+      prediction = 'SELL';
+      confidence = Math.min(0.55 + (Math.abs(rankDiff) / 150), 0.92);
+    } else {
+      // Close match - use points difference as tiebreaker
+      if (pointsDiff > 50) {
+        prediction = 'BUY';
+        confidence = 0.55;
+      } else if (pointsDiff < -50) {
+        prediction = 'SELL';
+        confidence = 0.55;
+      } else {
+        prediction = 'HOLD';
+        confidence = 0.50;
+      }
     }
+    
+    expectedGoals = (homeStrength.goals_avg + awayStrength.goals_avg) / 2;
     
     return {
       match: match.home + ' vs ' + match.away,
       home_rank: homeStrength.rank,
       away_rank: awayStrength.rank,
+      rank_diff: rankDiff,
+      points_diff: pointsDiff,
       prediction: prediction,
-      confidence: Math.min(confidence, 0.95),
+      confidence: confidence,
       expectedGoals: expectedGoals,
       tier_matchup: `${homeStrength.tier} vs ${awayStrength.tier}`
     };
@@ -71,10 +93,9 @@ class MLPatternDetector {
     
     return {
       fixture: match.home + ' vs ' + match.away,
-      prediction: analysis.prediction === 'HOME WIN' ? 'BUY' : 
-                  analysis.prediction === 'AWAY WIN' ? 'SELL' : 'HOLD',
+      prediction: analysis.prediction,
       confidence: analysis.confidence,
-      reason: `Rank ${analysis.home_rank} vs ${analysis.away_rank}, ${analysis.tier_matchup}`,
+      reason: `Rank ${analysis.home_rank} vs ${analysis.away_rank} (diff: ${analysis.rank_diff})`,
       expectedGoals: analysis.expectedGoals,
       timestamp: new Date().toISOString()
     };

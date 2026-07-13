@@ -22,6 +22,52 @@
           "trades": 0
         }
       ]
+    },
+    {
+      "timestamp": "2026-07-13T11:58:35.673Z",
+      "agents": [
+        {
+          "name": "ML Prophet",
+          "bankroll": 10000,
+          "winRate": 0,
+          "trades": 0
+        },
+        {
+          "name": "Sentinel AI",
+          "bankroll": 10000,
+          "winRate": 0,
+          "trades": 0
+        },
+        {
+          "name": "Simple Momentum",
+          "bankroll": 10000,
+          "winRate": 0,
+          "trades": 0
+        }
+      ]
+    },
+    {
+      "timestamp": "2026-07-13T12:30:21.118Z",
+      "agents": [
+        {
+          "name": "ML Prophet",
+          "bankroll": 10000,
+          "winRate": 0,
+          "trades": 0
+        },
+        {
+          "name": "Sentinel AI",
+          "bankroll": 10000,
+          "winRate": 0,
+          "trades": 0
+        },
+        {
+          "name": "Simple Momentum",
+          "bankroll": 10000,
+          "winRate": 0,
+          "trades": 0
+        }
+      ]
     }
   ]
 }
