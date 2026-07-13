@@ -86,10 +86,15 @@ Agents act independently on each polling cycle. There is no manual trade approva
 - Bankroll trend over time, sampled at 15-minute intervals via `/api/history`
 
 ### Telegram Bot
+
+**Bot Icon:** Robot hand holding a holographic soccer ball with digital data particles - representing the fusion of AI agents and World Cup data.
+
 - Live match alerts for World Cup fixtures
 - Agent predictions sent directly to your phone
 - Leaderboard updates showing top performing agent
 - Real-time notifications without needing to check the dashboard
+
+[Try it on Telegram](https://t.me/worldcup_agent_bot)al-time notifications without needing to check the dashboard
 
 ---
 

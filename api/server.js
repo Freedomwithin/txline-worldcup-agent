@@ -3,10 +3,8 @@ const path = require('path');
 const { MLAgentArena } = require('../src/ml_agent_arena');
 const { initHistory, appendSnapshot, getHistory } = require('../src/history');
 
-// Initialize history on startup
 initHistory();
 
-// Load credentials
 function loadCredentials() {
   let jwt = process.env.TXLINE_JWT;
   let apiToken = process.env.TXLINE_API_TOKEN;
@@ -40,12 +38,10 @@ module.exports = async (req, res) => {
   console.log('📡 Request:', req.method, req.url);
   
   if (req.url === '/history' || req.url === '/api/history') {
-    console.log('📊 History endpoint called');
     return handleHistory(req, res);
   }
   
   if (req.url === '/matches' || req.url === '/api/matches') {
-    console.log('📊 Matches endpoint called');
     return handleMatches(req, res);
   }
   
@@ -67,7 +63,6 @@ async function handleMatches(req, res) {
     const { jwt, apiToken } = loadCredentials();
     
     if (!jwt || !apiToken) {
-      console.error('❌ Missing credentials');
       return res.status(401).json({
         success: false,
         error: 'Missing credentials'
@@ -102,7 +97,6 @@ async function handleMatches(req, res) {
       if (isLive) status = 'live';
       else if (isSoon) status = 'soon';
       
-      // Get predictions for this match
       const matchData = {
         id: fixture.FixtureId,
         home: fixture.Participant1,
@@ -116,7 +110,6 @@ async function handleMatches(req, res) {
         hasScores: false
       };
       
-      // Get predictions from all agents
       const predictions = arena.getPredictions(matchData);
       
       matches.push({
@@ -125,15 +118,19 @@ async function handleMatches(req, res) {
       });
     }
 
+    // Find next match and set predictions for agents
+    const nextMatch = matches
+      .filter(m => m.status === 'upcoming' || m.status === 'soon')
+      .sort((a, b) => new Date(a.startTime) - new Date(b.startTime))[0] || null;
+    
+    if (nextMatch) {
+      arena.setNextMatchPredictions(nextMatch);
+    }
+
     const agentStats = arena.getStats();
     const leaderboard = arena.getLeaderboard();
     
     appendSnapshot(agentStats);
-
-    // Find next match
-    const nextMatch = matches
-      .filter(m => m.status === 'upcoming' || m.status === 'soon')
-      .sort((a, b) => new Date(a.startTime) - new Date(b.startTime))[0] || null;
 
     res.status(200).json({
       success: true,

@@ -16,6 +16,14 @@
       "dest": "/api/server.js"
     },
     {
+      "src": "/analytics",
+      "dest": "/public/analytics.html"
+    },
+    {
+      "src": "/analytics.html",
+      "dest": "/public/analytics.html"
+    },
+    {
       "src": "/(.*)",
       "dest": "/public/index.html"
     }

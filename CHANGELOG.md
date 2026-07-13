@@ -102,3 +102,11 @@
 - Initial agent implementation
 - TxLINE API integration
 - JWT and API token authentication
+## [0.8.3] - 2026-07-13
+
+### Added
+- **Telegram Bot Icon**: Custom icon featuring robot hand holding holographic soccer ball with digital data particles
+- **Visual Identity**: Professional bot icon matching the tech/sports theme of the project
+
+### Enhanced
+- **Branding**: Telegram bot now has a custom icon for better recognition

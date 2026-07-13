@@ -68,6 +68,75 @@
           "trades": 0
         }
       ]
+    },
+    {
+      "timestamp": "2026-07-13T12:55:34.872Z",
+      "agents": [
+        {
+          "name": "ML Prophet",
+          "bankroll": 10000,
+          "winRate": 0,
+          "trades": 0
+        },
+        {
+          "name": "Sentinel AI",
+          "bankroll": 10000,
+          "winRate": 0,
+          "trades": 0
+        },
+        {
+          "name": "Simple Momentum",
+          "bankroll": 10000,
+          "winRate": 0,
+          "trades": 0
+        }
+      ]
+    },
+    {
+      "timestamp": "2026-07-13T13:25:37.043Z",
+      "agents": [
+        {
+          "name": "ML Prophet",
+          "bankroll": 1000,
+          "winRate": 0,
+          "trades": 0
+        },
+        {
+          "name": "Sentinel AI",
+          "bankroll": 1000,
+          "winRate": 0,
+          "trades": 0
+        },
+        {
+          "name": "Simple Momentum",
+          "bankroll": 1000,
+          "winRate": 0,
+          "trades": 0
+        }
+      ]
+    },
+    {
+      "timestamp": "2026-07-13T13:40:48.029Z",
+      "agents": [
+        {
+          "name": "ML Prophet",
+          "bankroll": 1000,
+          "winRate": 0,
+          "trades": 0
+        },
+        {
+          "name": "Sentinel AI",
+          "bankroll": 1000,
+          "winRate": 0,
+          "trades": 0
+        },
+        {
+          "name": "Simple Momentum",
+          "bankroll": 1000,
+          "winRate": 0,
+          "trades": 0
+        }
+      ]
     }
   ]
 }
