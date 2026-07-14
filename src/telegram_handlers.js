@@ -7,32 +7,51 @@ const API_URL = process.env.VERCEL
   : 'http://localhost:3000/api/matches';
 
 class TelegramHandlers {
-  constructor(token, chatId) {
-    this.bot = new TelegramBot(token, chatId);
+  constructor(token) {
+    // Don't hardcode chatId in the constructor
+    this.token = token;
     this.apiUrl = `https://api.telegram.org/bot${token}`;
   }
 
-  async handleCommand(command, args) {
+  // Create a bot instance for a specific chat
+  getBot(chatId) {
+    return new TelegramBot(this.token, chatId);
+  }
+
+  async handleCommand(command, args, chatId) {
+    const bot = this.getBot(chatId);
+    let response;
+    
     switch (command) {
       case '/start':
-        return this.handleStart();
+        response = await this.handleStart();
+        break;
       case '/help':
-        return this.handleHelp();
+        response = await this.handleHelp();
+        break;
       case '/matches':
-        return this.handleMatches();
+        response = await this.handleMatches();
+        break;
       case '/predictions':
-        return this.handlePredictions();
+        response = await this.handlePredictions();
+        break;
       case '/leaderboard':
-        return this.handleLeaderboard();
+        response = await this.handleLeaderboard();
+        break;
       case '/agents':
-        return this.handleAgents();
+        response = await this.handleAgents();
+        break;
       case '/live':
-        return this.handleLive();
+        response = await this.handleLive();
+        break;
       case '/status':
-        return this.handleStatus();
+        response = await this.handleStatus();
+        break;
       default:
-        return 'Unknown command. Try /help';
+        response = 'Unknown command. Try /help';
     }
+    
+    return bot.sendMessage(response);
   }
 
   async handleStart() {

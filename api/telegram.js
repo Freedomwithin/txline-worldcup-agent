@@ -1,9 +1,8 @@
 const { TelegramHandlers } = require('../src/telegram_handlers.js');
 
 const token = process.env.TELEGRAM_BOT_TOKEN;
-const chatId = process.env.TELEGRAM_CHAT_ID;
 
-const handlers = new TelegramHandlers(token, chatId);
+const handlers = new TelegramHandlers(token);
 
 module.exports = async (req, res) => {
   console.log(`📡 Request: ${req.method} ${req.url}`);
@@ -30,17 +29,14 @@ module.exports = async (req, res) => {
         
         console.log(`📩 Received: ${text} from ${chatId}`);
         
-        let response;
         if (text.startsWith('/')) {
           const command = text.split(' ')[0];
           const args = text.split(' ').slice(1);
-          response = await handlers.handleCommand(command, args);
+          await handlers.handleCommand(command, args, chatId);
         } else {
-          response = 'Send a command: /help, /matches, /predictions, /leaderboard, /agents, /live, /status';
+          const bot = handlers.getBot(chatId);
+          await bot.sendMessage('Send a command: /help, /matches, /predictions, /leaderboard, /agents, /live, /status');
         }
-        
-        const bot = handlers.bot;
-        await bot.sendMessage(response);
       }
       
       res.status(200).json({ ok: true });
