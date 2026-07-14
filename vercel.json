@@ -28,6 +28,14 @@
       "dest": "/api/server.js"
     },
     {
+      "src": "/(.*)\\.html$",
+      "dest": "/public/$1.html"
+    },
+    {
+      "src": "/assets/(.*)",
+      "dest": "/public/assets/$1"
+    },
+    {
       "src": "/(.*)",
       "dest": "/public/index.html"
     }
