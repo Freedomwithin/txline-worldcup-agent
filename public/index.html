@@ -606,29 +606,46 @@
   <script>
     let currentMatches = [];
 
-    function openModal(index) {
-      const match = currentMatches[index];
-      if (!match) return;
+  function openModal(index) {
+    const match = currentMatches[index];
+    if (!match) return;
 
-      const modal = document.getElementById('matchModal');
-      document.getElementById('modal-title').textContent = match.home + ' vs ' + match.away;
+    const modal = document.getElementById('matchModal');
+    document.getElementById('modal-title').textContent = match.home + ' vs ' + match.away;
 
-      const statusText = match.isLive ? 'Live' : match.status === 'soon' ? 'Soon' : match.status === 'completed' ? 'Completed' : 'Upcoming';
+    const statusText = match.isLive ? 'Live' : match.status === 'soon' ? 'Soon' : match.status === 'completed' ? 'Completed' : 'Upcoming';
 
-      document.getElementById('modal-body').innerHTML = `
-        <div class="modal-detail-row"><span class="label">Competition</span><span class="value">${match.competition}</span></div>
-        <div class="modal-detail-row"><span class="label">Status</span><span class="value">${statusText}</span></div>
-        <div class="modal-detail-row"><span class="label">Start Time</span><span class="value">${new Date(match.startTime).toLocaleString()}</span></div>
-        <div class="modal-detail-row"><span class="label">World Cup</span><span class="value">${match.isWorldCup ? 'Yes' : 'No'}</span></div>
-        <div class="modal-detail-row"><span class="label">Events</span><span class="value">${match.eventCount || 0}</span></div>
-        ${match.hasScores !== undefined ? `<div class="modal-detail-row"><span class="label">Scores Available</span><span class="value">${match.hasScores ? 'Yes' : 'No'}</span></div>` : ''}
-        <div class="modal-agent-activity">Agent activity: ${match.agentActivity || 'No agent activity yet'}</div>
-        <button class="modal-close-btn" onclick="closeModal()">Close</button>
-      `;
-
-      modal.classList.add('active');
-      document.body.style.overflow = 'hidden';
+    // Build predictions HTML
+    let predictionsHtml = '<div style="font-size:0.8rem;color:var(--text-dim);">No predictions available</div>';
+    if (match.predictions) {
+      predictionsHtml = Object.entries(match.predictions).map(([agent, pred]) => {
+        const color = pred.action === 'BUY' ? 'var(--grass)' : pred.action === 'SELL' ? 'var(--live)' : 'var(--gold)';
+        return `
+          <div style="display:flex;justify-content:space-between;font-size:0.8rem;margin-top:4px;color:var(--white);">
+            <span>${agent}</span>
+            <span style="color:${color}">${pred.action} (${pred.confidence}%)</span>
+          </div>
+        `;
+      }).join('');
     }
+
+    document.getElementById('modal-body').innerHTML = `
+      <div class="modal-detail-row"><span class="label">Competition</span><span class="value">${match.competition}</span></div>
+      <div class="modal-detail-row"><span class="label">Status</span><span class="value">${statusText}</span></div>
+      <div class="modal-detail-row"><span class="label">Start Time</span><span class="value">${new Date(match.startTime).toLocaleString()}</span></div>
+      <div class="modal-detail-row"><span class="label">World Cup</span><span class="value">${match.isWorldCup ? 'Yes' : 'No'}</span></div>
+      <div class="modal-detail-row"><span class="label">Events</span><span class="value">${match.eventCount || 0}</span></div>
+      ${match.hasScores !== undefined ? `<div class="modal-detail-row"><span class="label">Scores Available</span><span class="value">${match.hasScores ? 'Yes' : 'No'}</span></div>` : ''}
+      <div style="margin-top:14px;padding:10px 12px;background:rgba(53,209,125,0.06);border-radius:6px;border-left:2px solid var(--grass);">
+        <div style="font-size:0.7rem;text-transform:uppercase;letter-spacing:0.06em;color:var(--text-faint);">Agent Predictions</div>
+        ${predictionsHtml}
+      </div>
+      <button class="modal-close-btn" onclick="closeModal()">Close</button>
+    `;
+
+    modal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
 
     function closeModal() {
       const modal = document.getElementById('matchModal');
