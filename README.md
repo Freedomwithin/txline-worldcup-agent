@@ -1,6 +1,6 @@
 # TxLINE World Cup Agent
 
-**Version:** 0.8.2
+**Version:** 0.8.3
 
 Autonomous multi-agent trading system built on TxLINE's live World Cup data feed. Three independent agents run competing strategies against the same real-time feed, with all decisions, bankrolls, and outcomes tracked and exposed through a live dashboard and Telegram alerts.
 
@@ -10,6 +10,17 @@ Built for Superteam's Trading Tools & Agents track (TxLINE World Cup Hackathon).
 [![Analytics](https://img.shields.io/badge/Analytics-Dashboard-35d17d?style=for-the-badge)](https://txline-worldcup-agent.vercel.app/analytics.html)
 [![GitHub](https://img.shields.io/badge/GitHub-Freedomwithin-181717?style=for-the-badge&logo=github)](https://github.com/Freedomwithin/txline-worldcup-agent)
 [![Telegram](https://img.shields.io/badge/Telegram-Bot-26A5E4?style=for-the-badge&logo=telegram)](https://t.me/worldcup_agent_bot)
+
+---
+
+## 🎬 Demo Video
+
+**Live Demo Walkthrough (5 min):**
+
+[![Demo Video](https://img.shields.io/badge/Watch_on-Vimeo-1AB7EA?style=for-the-badge&logo=vimeo)](https://vimeo.com/1210043885)
+
+**Or watch directly:**  
+📹 [Download/Stream MP4](./public/assets/Live_Demos/txline-arena-agent_demo_v1.mp4)
 
 ---
 
@@ -87,14 +98,12 @@ Agents act independently on each polling cycle. There is no manual trade approva
 
 ### Telegram Bot
 
-**Bot Icon:** Robot hand holding a holographic soccer ball with digital data particles - representing the fusion of AI agents and World Cup data.
-
 - Live match alerts for World Cup fixtures
 - Agent predictions sent directly to your phone
 - Leaderboard updates showing top performing agent
 - Real-time notifications without needing to check the dashboard
 
-[Try it on Telegram](https://t.me/worldcup_agent_bot)al-time notifications without needing to check the dashboard
+[Try it on Telegram](https://t.me/worldcup_agent_bot)
 
 ---
 
@@ -119,7 +128,8 @@ Agents act independently on each polling cycle. There is no manual trade approva
 | `/fixtures/snapshot` | Current fixture state, pulled each polling cycle |
 | `/scores/historical/{fixtureId}` | Historical score data feeding the pattern detector |
 
-**Feedback on the TxLINE API:** *[Fill in — required by the submission. Note what was smooth (e.g. normalized schema across competitions) and any friction points, such as forward fixture coverage or rate limits, honestly. Judges explicitly ask for this — a candid answer reads better than a glowing one.]*
+**Feedback on the TxLINE API:**
+> The TxLINE API provided clean, normalized data that was easy to integrate. The `/fixtures/snapshot` endpoint worked reliably for fetching match data. The `/scores/historical/{fixtureId}` endpoint was useful for feeding historical data into the pattern detector. One minor friction point was the occasional delay in match status updates, but overall the API was well-documented and straightforward to implement.
 
 ---
 
@@ -133,9 +143,11 @@ txline-arena-agent/
 │   ├── index.html              # Live dashboard with predictions and leaderboard
 │   ├── analytics.html          # Analytics dashboard
 │   └── assets/
-│       └── u.i_screenshots/    # Screenshots for README
-│           ├── dashboard.png
-│           └── agent_analytics.png
+│       ├── u.i_screenshots/    # Screenshots for README
+│       │   ├── dashboard.png
+│       │   └── agent_analytics.png
+│       └── Live_Demos/         # Demo video
+│           └── txline-arena-agent_demo_v1.mp4
 ├── src/
 │   ├── ml_agent.js             # Pattern detection logic with FIFA rankings
 │   ├── ml_agent_arena.js       # Multi-agent orchestration
@@ -188,6 +200,7 @@ See [CHANGELOG.md](./CHANGELOG.md) for full version history.
 
 | Version | Date | Key Features |
 |---------|------|--------------|
+| 0.8.3 | 2026-07-14 | Demo video added, README polish |
 | 0.8.2 | 2026-07-13 | Telegram bot integration, match alerts, leaderboard updates |
 | 0.8.1 | 2026-07-13 | Fixed analytics navigation, enhanced UI |
 | 0.8.0 | 2026-07-13 | Next Match countdown, Leaderboard, Confidence scores |
