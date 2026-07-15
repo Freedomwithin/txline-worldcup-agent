@@ -11,7 +11,7 @@ class MLAgentArena {
   }
 
   initializeAgents() {
-    const STARTING_BANKROLL = 1000;  // $1,000 starting balance
+    const STARTING_BANKROLL = 1000;
 
     this.agents.push({
       name: 'ML Prophet',
@@ -62,6 +62,57 @@ class MLAgentArena {
     });
   }
 
+  // 🔄 Restore agent state from saved data
+  restoreFromState(savedState) {
+    if (!savedState || !savedState.agents) {
+      console.log('⚠️ No saved state found, using fresh agents');
+      return;
+    }
+
+    for (let i = 0; i < this.agents.length && i < savedState.agents.length; i++) {
+      const saved = savedState.agents[i];
+      const current = this.agents[i];
+
+      current.bankroll = saved.bankroll !== undefined ? saved.bankroll : 1000;
+      current.trades = saved.trades && Array.isArray(saved.trades) ? saved.trades : [];
+      current.wins = saved.wins || 0;
+      current.losses = saved.losses || 0;
+      current.lastAction = saved.lastAction || 'Waiting for data...';
+      current.lastConfidence = saved.lastConfidence || null;
+      current.lastPrediction = saved.lastPrediction || null;
+      
+      // Restore nextPrediction/nextConfidence if they exist
+      current.nextPrediction = saved.nextPrediction || null;
+      current.nextConfidence = saved.nextConfidence || null;
+      
+      // Recreate the detector for each agent
+      current.detector = new MLPatternDetector();
+    }
+
+    this.updateLeaderboard();
+    console.log('✅ Arena restored from saved state');
+  }
+
+  // 💾 Get serializable state for saving
+  getState() {
+    return {
+      agents: this.agents.map(agent => ({
+        name: agent.name,
+        strategy: agent.strategy,
+        bankroll: agent.bankroll,
+        trades: agent.trades,
+        wins: agent.wins,
+        losses: agent.losses,
+        lastAction: agent.lastAction,
+        lastConfidence: agent.lastConfidence,
+        lastPrediction: agent.lastPrediction,
+        nextPrediction: agent.nextPrediction,
+        nextConfidence: agent.nextConfidence
+      })),
+      timestamp: new Date().toISOString()
+    };
+  }
+
   setNextMatchPredictions(nextMatch) {
     if (!nextMatch) return;
     
@@ -105,6 +156,13 @@ class MLAgentArena {
   }
 
   evaluateTrade(agent, decision, outcome) {
+    // Push the trade to history
+    agent.trades.push({
+      decision: decision,
+      outcome: outcome,
+      timestamp: Date.now()
+    });
+
     if (outcome) {
       agent.wins++;
       agent.bankroll += decision.amount * 0.1;

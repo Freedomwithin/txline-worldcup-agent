@@ -24,6 +24,10 @@
       "dest": "/api/telegram.js"
     },
     {
+      "src": "/api/admin/scores",
+      "dest": "/api/server.js"
+    },
+    {
       "src": "/api/(.*)",
       "dest": "/api/server.js"
     },

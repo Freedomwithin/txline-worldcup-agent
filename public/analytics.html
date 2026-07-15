@@ -50,7 +50,6 @@
 
     .container { max-width: 1100px; margin: 0 auto; position: relative; }
 
-    /* ---------- Header ---------- */
     .header {
       position: relative;
       display: flex;
@@ -119,7 +118,6 @@
     }
     .back-link:hover { background: rgba(53, 209, 125, 0.08); border-color: var(--grass); }
 
-    /* ---------- Summary stats ---------- */
     .stats-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
@@ -151,7 +149,6 @@
     .stat-card.gold { border-bottom-color: var(--gold); }
     .stat-card.gold .number { color: var(--gold); text-shadow: 0 0 14px rgba(255, 204, 77, 0.4); }
 
-    /* ---------- Charts ---------- */
     .section-label {
       font-family: var(--font-mono);
       font-size: 0.7rem;
@@ -223,8 +220,6 @@
       font-size: 0.85rem;
       margin-bottom: 24px;
     }
-
-    a:focus-visible { outline: 2px solid var(--grass); outline-offset: 2px; }
 
     @media (max-width: 860px) {
       .chart-grid { grid-template-columns: 1fr; }
@@ -388,7 +383,7 @@
           statusArea.innerHTML = `<div class="error">${data.error || 'Unknown error'}</div>`;
           return;
         }
-        statusArea.innerHTML = `<div class="note-banner">Charts reflect each agent's current snapshot. Wire up a /api/history endpoint to plot bankroll trend over time.</div>`;
+        statusArea.innerHTML = `<div class="note-banner">Charts reflect each agent's current snapshot.</div>`;
 
         if (data.timestamp) {
           document.getElementById('timestamp').textContent = 'Last updated: ' + new Date(data.timestamp).toLocaleTimeString();

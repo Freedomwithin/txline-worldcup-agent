@@ -6,6 +6,7 @@ dist/
 .env
 .env.local
 .env.*.local
+venv/
 
 # Logs
 logs/
@@ -38,5 +39,10 @@ wallet.json
 .env*
 
 # Local docs
-
 project_scope.md
+
+# Additional
+.jwt
+.apitoken
+data/arena_state.json
+.bak

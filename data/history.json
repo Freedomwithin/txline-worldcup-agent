@@ -137,6 +137,167 @@
           "trades": 0
         }
       ]
+    },
+    {
+      "timestamp": "2026-07-14T19:31:55.244Z",
+      "agents": [
+        {
+          "name": "ML Prophet",
+          "bankroll": 1000,
+          "winRate": 0,
+          "trades": 0
+        },
+        {
+          "name": "Sentinel AI",
+          "bankroll": 1000,
+          "winRate": 0,
+          "trades": 0
+        },
+        {
+          "name": "Simple Momentum",
+          "bankroll": 1000,
+          "winRate": 0,
+          "trades": 0
+        }
+      ]
+    },
+    {
+      "timestamp": "2026-07-14T19:49:08.341Z",
+      "agents": [
+        {
+          "name": "ML Prophet",
+          "bankroll": 1000,
+          "winRate": 0,
+          "trades": 0
+        },
+        {
+          "name": "Sentinel AI",
+          "bankroll": 1000,
+          "winRate": 0,
+          "trades": 0
+        },
+        {
+          "name": "Simple Momentum",
+          "bankroll": 1000,
+          "winRate": 0,
+          "trades": 0
+        }
+      ]
+    },
+    {
+      "timestamp": "2026-07-14T20:04:25.810Z",
+      "agents": [
+        {
+          "name": "ML Prophet",
+          "bankroll": 1000,
+          "winRate": 0,
+          "trades": 0
+        },
+        {
+          "name": "Sentinel AI",
+          "bankroll": 1000,
+          "winRate": 0,
+          "trades": 0
+        },
+        {
+          "name": "Simple Momentum",
+          "bankroll": 1000,
+          "winRate": 0,
+          "trades": 0
+        }
+      ]
+    },
+    {
+      "timestamp": "2026-07-14T21:11:14.312Z",
+      "agents": [
+        {
+          "name": "ML Prophet",
+          "bankroll": 1000,
+          "winRate": 0,
+          "trades": 0
+        },
+        {
+          "name": "Sentinel AI",
+          "bankroll": 1000,
+          "winRate": 0,
+          "trades": 0
+        },
+        {
+          "name": "Simple Momentum",
+          "bankroll": 1000,
+          "winRate": 0,
+          "trades": 0
+        }
+      ]
+    },
+    {
+      "timestamp": "2026-07-15T02:30:29.280Z",
+      "agents": [
+        {
+          "name": "ML Prophet",
+          "bankroll": 1000,
+          "winRate": 0,
+          "trades": 0
+        },
+        {
+          "name": "Sentinel AI",
+          "bankroll": 1000,
+          "winRate": 0,
+          "trades": 0
+        },
+        {
+          "name": "Simple Momentum",
+          "bankroll": 1000,
+          "winRate": 0,
+          "trades": 0
+        }
+      ]
+    },
+    {
+      "timestamp": "2026-07-15T02:50:48.012Z",
+      "agents": [
+        {
+          "name": "ML Prophet",
+          "bankroll": 1000,
+          "winRate": 0,
+          "trades": 0
+        },
+        {
+          "name": "Sentinel AI",
+          "bankroll": 1000,
+          "winRate": 0,
+          "trades": 0
+        },
+        {
+          "name": "Simple Momentum",
+          "bankroll": 1000,
+          "winRate": 0,
+          "trades": 0
+        }
+      ]
+    },
+    {
+      "timestamp": "2026-07-15T03:06:47.607Z",
+      "agents": [
+        {
+          "name": "ML Prophet",
+          "bankroll": 1010,
+          "winRate": 100,
+          "trades": 1
+        },
+        {
+          "name": "Sentinel AI",
+          "bankroll": 990,
+          "winRate": 0,
+          "trades": 1
+        },
+        {
+          "name": "Simple Momentum",
+          "bankroll": 1000,
+          "winRate": 0,
+          "trades": 0
+        }
+      ]
     }
   ]
 }

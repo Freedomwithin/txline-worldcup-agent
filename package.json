@@ -1,10 +1,12 @@
 {
   "name": "txline-worldcup-agent",
-  "version": "0.2.0",
+  "version": "0.9.0",
   "description": "World Cup monitoring agent using TxLINE API",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js",
+    "dev": "vercel dev",
+    "start": "node api/server.js",
+    "deploy": "vercel --prod",
     "monitor": "node src/live_monitor.js",
     "dashboard": "node src/dashboard.js",
     "analyze": "node src/pattern_analyzer.js",

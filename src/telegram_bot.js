@@ -9,11 +9,15 @@ class TelegramBot {
 
   async sendMessage(text) {
     try {
+      console.log(`📤 Sending message to ${this.chatId}: ${text.slice(0, 50)}...`);
+      
       const response = await axios.post(`${this.apiUrl}/sendMessage`, {
         chat_id: this.chatId,
         text: text,
         parse_mode: 'HTML'
       });
+      
+      console.log(`✅ Message sent successfully`);
       return response.data;
     } catch (error) {
       console.error('❌ Telegram error:', error.response?.data || error.message);
