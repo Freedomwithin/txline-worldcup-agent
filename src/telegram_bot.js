@@ -74,6 +74,106 @@ ${sorted.map((agent, i) =>
     `;
     return this.sendMessage(message);
   }
+
+  // NEW: Send live odds
+  async sendOdds(fixtureId, oddsData) {
+    let message = `📊 <b>Live Odds</b>\n\n`;
+    message += `Fixture ID: ${fixtureId}\n`;
+    message += `Updated: ${new Date().toLocaleString()}\n\n`;
+    
+    if (oddsData && oddsData.markets) {
+      for (const market of oddsData.markets) {
+        message += `<b>${market.name}</b>\n`;
+        if (market.runners) {
+          for (const runner of market.runners) {
+            const price = runner.price || 'N/A';
+            const prob = runner.probability ? `${runner.probability}%` : '';
+            message += `  ${runner.name}: ${price} ${prob}\n`;
+          }
+        }
+        message += '\n';
+      }
+    } else {
+      message += 'No odds data available for this match.';
+    }
+    
+    return this.sendMessage(message);
+  }
+
+  // NEW: Send match stats
+  async sendMatchStats(fixtureId, stats) {
+    let message = `⚽ <b>Match Stats</b>\n\n`;
+    message += `Fixture ID: ${fixtureId}\n`;
+    message += `Updated: ${new Date().toLocaleString()}\n\n`;
+    
+    if (stats && stats.events) {
+      const goals = stats.events.filter(e => e.type === 'goal');
+      const cards = stats.events.filter(e => e.type === 'card');
+      const subs = stats.events.filter(e => e.type === 'substitution');
+      
+      message += `📊 Events: ${stats.events.length}\n`;
+      message += `⚽ Goals: ${goals.length}\n`;
+      message += `🟨 Cards: ${cards.length}\n`;
+      message += `🔄 Subs: ${subs.length}\n\n`;
+      
+      if (goals.length > 0) {
+        message += `<b>⚽ Goals:</b>\n`;
+        for (const goal of goals) {
+          const player = goal.player || 'Unknown';
+          const team = goal.team || '';
+          const minute = goal.minute || '?';
+          message += `  ${player} (${team}) - ${minute}'\n`;
+        }
+        message += '\n';
+      }
+      
+      if (cards.length > 0) {
+        message += `<b>🟨 Cards:</b>\n`;
+        for (const card of cards) {
+          const player = card.player || 'Unknown';
+          const team = card.team || '';
+          const type = card.cardType || 'Yellow';
+          const minute = card.minute || '?';
+          message += `  ${player} (${team}) - ${type} ${minute}'\n`;
+        }
+      }
+    } else {
+      message += 'No stats available for this match.';
+    }
+    
+    return this.sendMessage(message);
+  }
+
+  // NEW: Send auto-alert for match events
+  async sendEventAlert(event, match) {
+    const emojiMap = {
+      'goal': '⚽',
+      'card': '🟨',
+      'substitution': '🔄',
+      'odds_shift': '📊'
+    };
+    
+    const emoji = emojiMap[event.type] || '📢';
+    
+    let message = `${emoji} <b>MATCH EVENT</b>\n\n`;
+    message += `⚽ ${match.home} vs ${match.away}\n`;
+    
+    if (event.type === 'goal') {
+      message += `${event.player} scores for ${event.team}!\n`;
+      message += `⏱️ ${event.minute}' - Score: ${event.score}\n`;
+    } else if (event.type === 'card') {
+      message += `${event.player} (${event.team}) - ${event.cardType} card\n`;
+      message += `⏱️ ${event.minute}'\n`;
+    } else if (event.type === 'odds_shift') {
+      message += `Significant odds shift detected!\n`;
+      message += `Market: ${event.market}\n`;
+      message += `Before: ${event.before} → After: ${event.after}\n`;
+    }
+    
+    message += `\n🤖 Agent consensus: ${event.agentConsensus || 'HOLD'}`;
+    
+    return this.sendMessage(message);
+  }
 }
 
 module.exports = { TelegramBot };

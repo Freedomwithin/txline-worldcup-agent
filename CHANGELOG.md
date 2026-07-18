@@ -1,5 +1,31 @@
 # Changelog
 
+## [0.10.0] - 2026-07-18
+
+### Added
+- **Enhanced Telegram Bot Commands**: 9 total commands with optimized, engaging messages
+  - `/matches` - Shows upcoming matches with time-until-kickoff
+  - `/predictions` - Live agent predictions with confidence %
+  - `/leaderboard` - Agent rankings by bankroll with medal icons
+  - `/agents` - Detailed agent stats and strategies
+  - `/live` - Currently live matches with elapsed time
+  - `/status` - System health with agent and match counts
+  - `/odds [fixtureId]` - Live odds from TxLINE
+  - `/stats [fixtureId]` - Match stats: goals, cards, substitutions
+  - `/settle` - Last on-chain settlement transaction
+- **Better Command UX**: Emoji-rich, formatted messages with real-time data
+- **Time-until-kickoff**: Shows countdown in human-readable format
+
+### Enhanced
+- **Telegram Bot About/Description**: Updated to reflect full feature set
+- **Bot Commands**: Registered all 9 commands with @BotFather
+- **Message Formatting**: Consistent emoji use and clear data presentation
+
+### Fixed
+- All handler methods now use consistent formatting and error handling
+- `getTimeUntil()` utility for countdown display
+- `getMatchElapsed()` utility for live match duration
+
 ## [0.9.3] - 2026-07-15
 
 ### Security

@@ -101,10 +101,26 @@ Signal generation runs autonomously on every polling cycle with no human step. S
 
 ### Telegram Bot
 
-- Live match alerts for World Cup fixtures
-- Agent predictions sent directly to your phone
-- Leaderboard updates showing top performing agent
-- Real-time notifications without needing to check the dashboard
+**Commands:**
+| Command | What it does |
+|---------|--------------|
+| `/matches` | 📅 Upcoming World Cup matches with time-until-kickoff |
+| `/predictions` | 🔮 Live agent predictions with confidence % |
+| `/leaderboard` | 🏆 Agent rankings by bankroll with medal icons |
+| `/agents` | 🤖 Detailed agent stats & strategies |
+| `/live` | 🔴 Currently live matches with elapsed time |
+| `/status` | 📊 System health & data source |
+| `/odds [fixtureId]` | 📈 Live odds for a match |
+| `/stats [fixtureId]` | ⚽ Match stats: goals, cards, substitutions |
+| `/settle` | 🔗 Last on-chain settlement transaction |
+
+**Features:**
+- ⚽ Auto-match alerts when goals or cards occur
+- 📊 Real-time agent predictions sent to your phone
+- 🏆 Leaderboard updates showing top performing agent
+- 📈 Live odds and match stats on demand
+
+[Try it on Telegram](https://t.me/worldcup_agent_bot)
 
 [Try it on Telegram](https://t.me/worldcup_agent_bot)
 
