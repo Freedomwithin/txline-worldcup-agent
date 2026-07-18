@@ -43,6 +43,9 @@ project_scope.md
 
 # Additional
 .jwt
+*.jwt
+*.jwt_*
+.jwt*
 .apitoken
 data/arena_state.json
 .bak
