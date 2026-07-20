@@ -1,9 +1,10 @@
 const { TelegramHandlers } = require('../src/telegram_handlers.js');
 
 const token = process.env.TELEGRAM_BOT_TOKEN;
-const txlineToken = process.env.TXLINE_API_TOKEN || process.env.TXLINE_JWT;
+const jwt = process.env.TXLINE_JWT;
+const apiToken = process.env.TXLINE_API_TOKEN;
 
-const handlers = new TelegramHandlers(token, txlineToken);
+const handlers = new TelegramHandlers(token, jwt, apiToken);
 
 module.exports = async (req, res) => {
   console.log(`📡 Request: ${req.method} ${req.url}`);
