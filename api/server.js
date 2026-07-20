@@ -1,9 +1,7 @@
-// api/server.js
 const express = require('express');
 const cors = require('cors');
 const { getArena, savePersistentArena, getPredictions } = require('../src/arena_state');
 const { initHistory, appendSnapshot, getHistory } = require('../src/history');
-// const { executeSettlement } = require('../src/onchain_settlement');
 const axios = require('axios');
 const fs = require('fs');
 const path = require('path');
@@ -13,13 +11,11 @@ app.use(cors());
 app.use(express.json());
 
 // ============================================================
-// ARENA INITIALIZATION - Using simple arena_state
+// ARENA INITIALIZATION
 // ============================================================
 
-// Load arena on startup
 let arena = getArena();
 
-// Save function for arena state
 function saveArenaState() {
   try {
     savePersistentArena(arena);
@@ -88,14 +84,6 @@ function getTeamRankings() {
 
 const TEAM_RANKINGS = getTeamRankings();
 
-function getPredictionEmoji(prediction) {
-  if (!prediction) return '⏸️';
-  const p = prediction.toUpperCase();
-  if (p === 'BUY') return '📈';
-  if (p === 'SELL') return '📉';
-  return '⏸️';
-}
-
 // ============================================================
 // API ROUTES
 // ============================================================
@@ -105,7 +93,6 @@ app.get('/api/matches', async (req, res) => {
   try {
     console.log('📡 Request: GET /api/matches');
     
-    // Reload arena from disk on each request
     arena = getArena();
     
     if (!jwt || !apiToken) {
@@ -115,7 +102,6 @@ app.get('/api/matches', async (req, res) => {
       });
     }
 
-    // Fetch fixtures from TxLINE
     const fixturesResponse = await axios.get('https://txline-dev.txodds.com/api/fixtures/snapshot', {
       headers: {
         'Authorization': `Bearer ${jwt}`,
@@ -127,7 +113,6 @@ app.get('/api/matches', async (req, res) => {
     const fixtures = fixturesResponse.data || [];
     console.log(`📊 found ${fixtures.length} fixtures`);
 
-    // Process each fixture
     const matches = [];
     let completedMatches = 0;
 
@@ -154,12 +139,9 @@ app.get('/api/matches', async (req, res) => {
         awayRank: TEAM_RANKINGS[isP1Home ? fixture.Participant2 : fixture.Participant1] || null
       };
 
-      // Get agent predictions for this match using simple function
       try {
         const predictions = getPredictions(match);
         match.predictions = predictions;
-        
-        // Also store as agentActivity for display
         match.agentActivity = Object.entries(predictions)
           .map(([name, pred]) => `${name}: ${pred.action} (${pred.confidence}%)`)
           .join(' | ');
@@ -178,13 +160,11 @@ app.get('/api/matches', async (req, res) => {
 
     console.log(`📊 Completed matches: ${completedMatches}`);
 
-    // Update agent arena with next match (sorted by start time)
     const upcoming = matches.filter(m => m.status === 'upcoming' || m.status === 'soon');
     const nextMatch = upcoming.length > 0 
       ? [...upcoming].sort((a, b) => new Date(a.startTime) - new Date(b.startTime))[0]
       : null;
     
-    // Get agent stats from arena
     const agentStats = arena.agents.map(agent => ({
       ...agent,
       winRate: agent.wins + agent.losses > 0 
@@ -192,10 +172,8 @@ app.get('/api/matches', async (req, res) => {
         : '0%'
     }));
 
-    // Create leaderboard sorted by bankroll
     const leaderboard = [...agentStats].sort((a, b) => b.bankroll - a.bankroll);
 
-    // Prepare response
     const response = {
       success: true,
       timestamp: new Date().toISOString(),
@@ -244,7 +222,7 @@ app.get('/api/history', async (req, res) => {
   }
 });
 
-// POST /api/admin/scores - Manual score override
+// POST /api/admin/scores
 app.post('/api/admin/scores', async (req, res) => {
   try {
     const adminKey = req.headers['x-admin-key'];
@@ -266,7 +244,6 @@ app.post('/api/admin/scores', async (req, res) => {
       });
     }
 
-    // Save to manual scores
     const manualScoresPath = path.join(__dirname, '../data/manual_scores.json');
     let manualScores = {};
     
@@ -315,10 +292,8 @@ app.get('/api/health', (req, res) => {
 
 const PORT = process.env.PORT || 3000;
 
-// For Vercel serverless
 module.exports = app;
 
-// For local development
 if (require.main === module) {
   app.listen(PORT, () => {
     console.log(`🚀 Server running on http://localhost:${PORT}`);
