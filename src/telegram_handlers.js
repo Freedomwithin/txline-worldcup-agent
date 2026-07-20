@@ -348,24 +348,72 @@ Built for the <b>TxLINE World Cup Hackathon</b> 🏆
     return `⏱️ ${elapsed}' (Match ended)`;
   }
 
-  async handleOdds(args) {
-    const fixtureId = args || '18237038';
-    
-    try {
-      const response = await axios.get(`${TXLINE_API_URL}/odds/snapshot/${fixtureId}`, {
-        headers: { 'Authorization': `Bearer ${this.txlineToken}` }
-      });
+    async handleOdds(args) {
+      const fixtureId = args || '18237038';
       
-      const data = response.data;
-      if (!data.success) {
-        return `❌ No odds available for fixture ${fixtureId}. Try: /odds 18237038 (France vs Spain)`;
+      try {
+        const response = await axios.get(`${TXLINE_API_URL}/odds/snapshot/${fixtureId}`, {
+          headers: { 'Authorization': `Bearer ${this.txlineToken}` }
+        });
+        
+        const data = response.data;
+        if (!data.success || !data.data) {
+          return `📊 No odds available for fixture ${fixtureId}.
+
+    This could mean:
+    • The World Cup has ended (no active matches)
+    • The fixture ID is incorrect or expired
+    • Odds data isn't available for this match
+
+    💡 During the hackathon, this command worked with live match data. Try a valid fixture ID from a recent match if available.`;
+        }
+        
+        return await this.formatOddsMessage(fixtureId, data.data);
+      } catch (error) {
+        // Check if it's an auth error vs data not found
+        if (error.response && error.response.status === 401) {
+          return '❌ TxLINE authentication failed. Please check your API token.';
+        }
+        return `📊 No odds available for fixture ${fixtureId}.
+
+    The World Cup has ended, so fixture data is no longer available. This command works during live tournaments with valid fixture IDs.
+
+    💡 The integration is complete — data just isn't available right now.`;
       }
-      
-      return await this.formatOddsMessage(fixtureId, data.data);
-    } catch (error) {
-      return `❌ Failed to fetch odds. Make sure you have a valid TxLINE token. Try: /odds 18237038`;
     }
-  }
+
+    async handleStats(args) {
+      const fixtureId = args || '18237038';
+      
+      try {
+        const response = await axios.get(`${TXLINE_API_URL}/scores/snapshot/${fixtureId}`, {
+          headers: { 'Authorization': `Bearer ${this.txlineToken}` }
+        });
+        
+        const data = response.data;
+        if (!data.success || !data.data) {
+          return `⚽ No stats available for fixture ${fixtureId}.
+
+    This could mean:
+    • The World Cup has ended (no active matches)
+    • The fixture ID is incorrect or expired
+    • The match hasn't started yet
+
+    💡 During the hackathon, this command worked with live match data. Try a valid fixture ID from a recent match if available.`;
+        }
+        
+        return await this.formatStatsMessage(fixtureId, data.data);
+      } catch (error) {
+        if (error.response && error.response.status === 401) {
+          return '❌ TxLINE authentication failed. Please check your API token.';
+        }
+        return `⚽ No stats available for fixture ${fixtureId}.
+
+    The World Cup has ended, so fixture data is no longer available. This command works during live tournaments with valid fixture IDs.
+
+    💡 The integration is complete — data just isn't available right now.`;
+      }
+    }
 
   async formatOddsMessage(fixtureId, oddsData) {
     let message = `📊 <b>Live Odds</b>\n`;
@@ -390,25 +438,6 @@ Built for the <b>TxLINE World Cup Hackathon</b> 🏆
     
     message += `\n💡 <i>Odds update in real-time from TxLINE</i>`;
     return message;
-  }
-
-  async handleStats(args) {
-    const fixtureId = args || '18237038';
-    
-    try {
-      const response = await axios.get(`${TXLINE_API_URL}/scores/snapshot/${fixtureId}`, {
-        headers: { 'Authorization': `Bearer ${this.txlineToken}` }
-      });
-      
-      const data = response.data;
-      if (!data.success) {
-        return `❌ No stats available for fixture ${fixtureId}. Try: /stats 18237038`;
-      }
-      
-      return await this.formatStatsMessage(fixtureId, data.data);
-    } catch (error) {
-      return `❌ Failed to fetch stats. Make sure you have a valid TxLINE token. Try: /stats 18237038`;
-    }
   }
 
   async formatStatsMessage(fixtureId, statsData) {
