@@ -1,5 +1,21 @@
 # Changelog
 
+All notable changes to TxLINE World Cup Agent will be documented in this file.
+
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## [0.10.1] - 2026-07-20
+
+### Fixed
+- **Telegram Bot Auth**: `/odds` and `/stats` now send both `Authorization: Bearer <JWT>` and `X-Api-Token` headers to TxLINE (was sending only one)
+- **API URL**: Corrected TxLINE endpoint from `txline.txodds.com` to `txline-dev.txodds.com`
+- **Fixture ID Parsing**: Fixed bug where bare `/odds` and `/stats` commands would use empty string instead of default fixture ID `18237038`
+- **Constructor**: `TelegramHandlers` now accepts separate `jwt` and `apiToken` parameters instead of collapsing them
+
+### Changed
+- `api/telegram.js` now passes both JWT and API token separately to handlers
+
 ## [0.10.0] - 2026-07-18
 
 ### Added
