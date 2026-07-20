@@ -1,8 +1,9 @@
 const { TelegramHandlers } = require('../src/telegram_handlers.js');
 
 const token = process.env.TELEGRAM_BOT_TOKEN;
+const txlineToken = process.env.TXLINE_API_TOKEN || process.env.TXLINE_JWT;
 
-const handlers = new TelegramHandlers(token);
+const handlers = new TelegramHandlers(token, txlineToken);
 
 module.exports = async (req, res) => {
   console.log(`📡 Request: ${req.method} ${req.url}`);
@@ -13,7 +14,7 @@ module.exports = async (req, res) => {
     return res.status(200).json({
       status: 'ok',
       message: 'Telegram webhook is running',
-      commands: ['/help', '/matches', '/predictions', '/leaderboard', '/agents', '/live', '/status']
+      commands: ['/help', '/matches', '/predictions', '/leaderboard', '/agents', '/live', '/status', '/odds', '/stats', '/settle']
     });
   }
 
@@ -35,7 +36,7 @@ module.exports = async (req, res) => {
           await handlers.handleCommand(command, args, chatId);
         } else {
           const bot = handlers.getBot(chatId);
-          await bot.sendMessage('Send a command: /help, /matches, /predictions, /leaderboard, /agents, /live, /status');
+          await bot.sendMessage('Send a command: /help, /matches, /predictions, /leaderboard, /agents, /live, /status, /odds, /stats, /settle');
         }
       }
       
